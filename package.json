@@ -1,0 +1,35 @@
+{
+  "name": "itaas-nodejs-tools",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Node.js tools",
+  "main": "./index.js",
+  "scripts": {
+    "test": "mocha test --recursive",
+    "debug-test": "mocha test --recursive --debug-brk=5858",
+    "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --recursive",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UUX-Brasil/itaas-nodejs-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/UUX-Brasil/itaas-nodejs-tools/issues"
+  },
+  "keywords": [
+    "node",
+    "nodejs",
+    "tools",
+    "itaas"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^2.11.1",
+    "mocha": "^2.5.3",
+    "should": "^9.0.0"
+  },
+  "author": "Itaas",
+  "license": "ISC",
+  "homepage": "https://github.com/UUX-Brasil/itaas-nodejs-tools#readme"
+}
