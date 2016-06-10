@@ -5,7 +5,9 @@
   "description": "Node.js tools",
   "main": "./lib/index.js",
   "scripts": {
-    "test": "mocha test --recursive",
+    "test": "mocha --recursive test/",
+    "test-debug": "mocha --debug-brk=5858 --recursive test",
+    "nodemon-test": "nodemon --exec \"npm test\"",
     "debug-test": "mocha test --recursive --debug-brk=5858",
     "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --recursive",
     "lint": "eslint ."
@@ -23,11 +25,17 @@
     "tools",
     "itaas"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "bunyan": "^1.8.1",
+    "lodash": "^4.13.1",
+    "mkdirp": "^0.5.1",
+    "uuid": "^2.0.2"
+  },
   "devDependencies": {
     "eslint": "^2.11.1",
+    "intercept-stdout": "^0.1.2",
     "mocha": "^2.5.3",
-    "should": "^9.0.0"
+    "should": "^9.0.1"
   },
   "author": "Itaas",
   "license": "ISC",
