@@ -29,13 +29,13 @@
     "bunyan": "^1.8.1",
     "lodash": "^4.13.1",
     "mkdirp": "^0.5.1",
-    "mocha": "^2.5.3",
     "uuid": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "^2.11.1",
     "express": "^4.13.4",
     "intercept-stdout": "^0.1.2",
+    "mocha": "^2.5.3",
     "request": "^2.72.0",
     "should": "^9.0.1"
   },
