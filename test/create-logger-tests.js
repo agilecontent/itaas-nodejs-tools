@@ -208,4 +208,23 @@ describe('.createLogger', function () {
 
     done();
   });
+  it('fail for invalid arguments', function (done) {
+    (function createLogger(){
+      tools.createLogger({
+        name: 'app log name',
+        logLevels: ['invalid-level', 'error', 'warn', 'info'],
+        logOutput: 'standard-streams',
+        logDirectory: './test-log-dir'
+      });}).should.throw();
+
+    (function createLogger(){
+      tools.createLogger({
+        name: 'app log name',
+        logLevels: ['fatal', 'error', 'warn', 'info'],
+        logOutput: 'invalid-output',
+        logDirectory: './test-log-dir'
+      });}).should.throw();
+
+    done();
+  });
 });
