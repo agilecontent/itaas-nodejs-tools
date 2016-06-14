@@ -34,7 +34,7 @@ describe('.express', function () {
         () => app.locals.config,
         () => app.locals.logger,
         () => app.locals.serviceLocator,
-        (req, res, next, context) => { res.locals.context = context; }));
+        (req, res, context) => { res.locals.context = context; }));
 
       //Route
       let exposed = {};
@@ -69,7 +69,7 @@ describe('.express', function () {
         () => app.locals.config,
         () => app.locals.logger,
         () => app.locals.serviceLocator,
-        (req, res, next, context) => { res.locals.context = context; }));
+        (req, res, context) => { res.locals.context = context; }));
 
       //Route
       let exposed = {};
@@ -114,7 +114,7 @@ describe('.express', function () {
         () => app.locals.config,
         () => app.locals.logger,
         () => app.locals.serviceLocator,
-        (req, res, next, context) => { res.locals.context = context; }));
+        (req, res, context) => { res.locals.context = context; }));
 
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger, 'common'));
@@ -160,7 +160,7 @@ describe('.express', function () {
         () => app.locals.config,
         () => app.locals.logger,
         () => app.locals.serviceLocator,
-        (req, res, next, context) => { res.locals.context = context; }));
+        (req, res, context) => { res.locals.context = context; }));
 
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger, ':method :url :status :http-version'));
@@ -205,7 +205,7 @@ describe('.express', function () {
         () => app.locals.config,
         () => app.locals.logger,
         () => app.locals.serviceLocator,
-        (req, res, next, context) => { res.locals.context = context; }));
+        (req, res, context) => { res.locals.context = context; }));
 
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger));
