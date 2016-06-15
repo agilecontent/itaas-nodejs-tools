@@ -7,8 +7,7 @@
   "scripts": {
     "test": "mocha --recursive test/",
     "test-debug": "mocha --debug-brk=5858 --recursive test",
-    "nodemon-test": "nodemon --exec \"npm test\"",
-    "debug-test": "mocha test --recursive --debug-brk=5858",
+    "nodemon": "nodemon --exec \"npm run lint && npm test\"",
     "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --recursive",
     "lint": "eslint ."
   },
