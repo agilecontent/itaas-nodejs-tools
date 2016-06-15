@@ -11,14 +11,9 @@ set -e
 DOCKER_IMAGE=$1
 DOCKER_REPOSITORY_URL=$2
 BRANCH=$3
-COMMIT_MESSAGE=$4
-IS_PULL_REQUEST=$5
-
-echo "DOCKER_IMAGE:$DOCKER_IMAGE"
-echo "DOCKER_REPOSITORY_URL:$DOCKER_REPOSITORY_URL"
-echo "BRANCH:$BRANCH"
-echo "COMMIT_MESSAGE:$COMMIT_MESSAGE"
-echo "IS_PULL_REQUEST:$IS_PULL_REQUEST"
+COMMIT=$4
+COMMIT_MESSAGE=$5
+IS_PULL_REQUEST=$6
 
 # Only when it is not a pull request
 if [ "${IS_PULL_REQUEST}" == "false" ]; then
@@ -34,10 +29,10 @@ if [ "${IS_PULL_REQUEST}" == "false" ]; then
     
 	# Tag with release pattern when in branch master
     if [ "${BRANCH}" == "master" ]; then
-      DOCKER_IMAGE_TAG=${APP_VERSION}.${COMMIT_MESSAGE}
+      DOCKER_IMAGE_TAG=${APP_VERSION}.${COMMIT}
     else
 	  # Tag with beta release pattern when others branches
-      DOCKER_IMAGE_TAG=${APP_VERSION}-beta.${BRANCH}.${COMMIT_MESSAGE}
+      DOCKER_IMAGE_TAG=${APP_VERSION}-beta.${BRANCH}.${COMMIT}
     fi
 	
     docker tag ${DOCKER_IMAGE} ${DOCKER_REPOSITORY_URL}:${DOCKER_IMAGE_TAG}
