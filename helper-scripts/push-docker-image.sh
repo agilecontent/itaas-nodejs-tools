@@ -1,12 +1,11 @@
 #!/bin/bash
-# Ship the docker image created in travis to docker private repo
+# Ship the docker image to private repo
 # parameters:
 #   DOCKER_IMAGE: docker image name you have created, e.g., uux/spotlight
 #   BRANCH: the branch this build is being done, e.g, master, dev, release_sprint61, TM-4135_diego_MyAwesomeFeature
 #   COMMIT_MESSAGE: commit message, used to check if it contains PUSH_DOCKER_IMAGE
 #   DOCKER_REPOSITORY_URL: URL of docker repository
 #   IS_PULL_REQUEST: if this build was started by a pull request
-
 set -e
 
 DOCKER_IMAGE=$1
@@ -15,7 +14,6 @@ BRANCH=$3
 COMMIT_MESSAGE=$4
 IS_PULL_REQUEST=$5
 
-# Push the docker image
 # Only when it is not a pull request
 if [ "${IS_PULL_REQUEST}" == "false" ]; then
   # Get the commit message
