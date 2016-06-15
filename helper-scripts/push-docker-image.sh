@@ -15,6 +15,14 @@ COMMIT=$4
 COMMIT_MESSAGE=$5
 IS_PULL_REQUEST=$6
 
+
+echo "1:DOCKER_IMAGE:$DOCKER_IMAGE"
+echo "2:DOCKER_REPOSITORY_URL:$DOCKER_REPOSITORY_URL"
+echo "3:BRANCH:$BRANCH"
+echo "4:COMMIT:$COMMIT"
+echo "5:COMMIT_MESSAGE:$COMMIT_MESSAGE"
+echo "6:IS_PULL_REQUEST:$IS_PULL_REQUEST"
+
 # Only when it is not a pull request
 if [ "${IS_PULL_REQUEST}" == "false" ]; then
   # Get the commit message
