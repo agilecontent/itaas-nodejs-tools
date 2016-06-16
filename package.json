@@ -8,7 +8,7 @@
     "test": "mocha --recursive test/",
     "test-debug": "mocha --debug-brk=5858 --recursive test",
     "nodemon": "nodemon --exec \"npm run lint && npm test\"",
-    "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --recursive",
+    "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --recursive -R progress",
     "lint": "eslint ."
   },
   "repository": {
