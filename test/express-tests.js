@@ -247,4 +247,34 @@ describe('.express', function () {
       done();
     });
   });
+  describe('.createLowercaseQueryMiddleware', function () {
+    it('should log request with the request logger', function (done) {
+      let app = express();
+
+      app.use(tools.express.createLowercaseQueryMiddleware());
+
+      let exposed = {};
+      app.use('/', (req, res, next) => {
+        exposed.query = req.query;
+        res.send('OK');
+      });
+
+      let server = app.listen(3001);
+
+      request('http://127.0.0.1:3001?q1=Test1&Q2=Test2', (error, response, body) => {
+        server.close();
+        
+        should.not.exist(error);
+        should.equal(body, 'OK');
+
+        exposed.query.should.keys('q1', 'q2');
+
+        should.deepEqual(exposed.query.q1, 'Test1');
+        should.deepEqual(exposed.query.q2, 'Test2');
+        should.deepEqual(exposed.query.Q2, undefined);
+
+        done();
+      });
+    });
+  });
 });
