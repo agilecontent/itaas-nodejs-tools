@@ -14,10 +14,10 @@ describe('.createCallContext', function () {
   it('should build an instance', function (done) {
     let context = tools.createCallContext(callId, config, logger, serviceLocator);
 
-    should.deepEqual(context.callId, callId);
+    should.equal(context.callId, callId);
     should.deepEqual(context.config, config);
-    should.deepEqual(context.logger, logger);
-    should.deepEqual(context.serviceLocator, serviceLocator);
+    should.equal(context.logger, logger);
+    should.equal(context.serviceLocator, serviceLocator);
 
     done();
   });
@@ -35,7 +35,7 @@ describe('.createCallContext', function () {
     should.throws(function () {
       tools.createCallContext(callId, config, logger, null);
     });
-    
+
     //undefined
     should.throws(function () {
       tools.createCallContext(undefined, config, logger, serviceLocator);
