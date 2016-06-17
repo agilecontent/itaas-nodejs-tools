@@ -106,6 +106,15 @@ describe('.createFieldSelector', function () {
       createViewAttempt.should.throw('Invalid field description format');
     }
   });
+  it('should throw for invalid arguments', function () {
+    should.throws(() => { tools.createFieldSelector(); });
+    should.throws(() => { tools.createFieldSelector(undefined); });
+    should.throws(() => { tools.createFieldSelector(null); });
+    should.throws(() => { tools.createFieldSelector(0); });
+    should.throws(() => { tools.createFieldSelector(false); });
+    should.throws(() => { tools.createFieldSelector(''); });
+    should.throws(() => { tools.createFieldSelector(true); });
+  });
   describe('.select', function () {
     it('should select only requested fields from source', function () {
       let selector = tools.createFieldSelector('fieldTwo');
@@ -241,6 +250,18 @@ describe('.createFieldSelector', function () {
       let selection = selector.select(source);
       selection.should.have.property('customData', {});
       Object.keys(selection).length.should.equal(1);
+    });
+    it('should throw for invalid parameters', function () {
+      let selector = tools.createFieldSelector('fieldOne');
+
+      should.throws(() => { selector.select(); });
+      should.throws(() => { selector.select(undefined); });
+      should.throws(() => { selector.select(null); });
+      should.throws(() => { selector.select(false); });
+      should.throws(() => { selector.select(0); });
+      should.throws(() => { selector.select(''); });
+      should.throws(() => { selector.select('fieldOne'); });
+
     });
   });
 });

@@ -13,13 +13,16 @@ describe('.createBaseResponse', function () {
     should.deepEqual(response.result, { a: 1, b: 2 });
     should.not.exist(response.error);
 
+    let response2 = tools.createBaseResponse('OK');
+    should.equal(response2.message, '');
+
     done();
   });
   it('fail for empty status', function (done) {
-    should.throws(function () {
+    should.throws(() => {
       tools.createBaseResponse(null, 'The request is OK', { a: 1, b: 2 });
     });
-    should.throws(function () {
+    should.throws(() => {
       tools.createBaseResponse(undefined, 'The request is OK', { a: 1, b: 2 });
     });
 
