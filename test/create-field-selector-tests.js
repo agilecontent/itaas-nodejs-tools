@@ -261,7 +261,6 @@ describe('.createFieldSelector', function () {
       should.throws(() => { selector.select(0); });
       should.throws(() => { selector.select(''); });
       should.throws(() => { selector.select('fieldOne'); });
-
     });
   });
 });
