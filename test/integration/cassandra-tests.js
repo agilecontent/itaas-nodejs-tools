@@ -132,21 +132,20 @@ describe('.cassandra', function () {
           contactPoints: [config.cassandraEndpoint],
           keyspace: 'test'
         });
+        let builder = tools.cassandra.createBatchQueryBuilder();
 
-        let cql = [
-          {
-            query: 'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value3\');',
-            params: { id: '3' }
-          },
-          {
-            query: 'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value4\');',
-            params: { id: '4' }
-          }
-        ];
+        builder.add(
+          'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value3\');',
+          { id: '3' }
+        );
+        builder.add(
+          'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value4\');',
+          { id: '4' }
+        );
 
         let cql2 = 'SELECT * FROM testtable where testid = :id;';
 
-        return cassandra.executeBatch(callContext, cql)
+        return cassandra.executeBatch(callContext, builder.getQueries())
           .then((result) => {
             return cassandra.executeQuery(callContext, cql2, { id: '3' });
           })
@@ -270,6 +269,36 @@ describe('.cassandra', function () {
         });
       });
       cassandraFacade.killClient();
+    });
+  });
+  describe('.createBatchQueryBuilder', function () {
+    it('creates a cassandra batch query builder', function () {
+      let builder = tools.cassandra.createBatchQueryBuilder();
+      should.exist(builder);
+      should.exist(builder.add);
+      should.exist(builder.getQueries);
+    });
+    describe('.add', function () {
+      it('add new query with parameters', function () {
+        let builder = tools.cassandra.createBatchQueryBuilder();
+
+        builder.add('query1', { p1: 'param1' });
+        builder.add('query2', [{ p2: 'param2' }]);
+
+        builder.queries[0].should.deepEqual({ query: 'query1', params: { p1: 'param1' } });
+        builder.queries[1].should.deepEqual({ query: 'query2', params: [{ p2: 'param2' }] });
+      });
+    });
+    describe('.getQueries', function () {
+      it('get queries after add them', function () {
+        let builder = tools.cassandra.createBatchQueryBuilder();
+
+        builder.add('query1', { p1: 'param1' });
+        builder.add('query2', [{ p2: 'param2' }]);
+
+        builder.getQueries()[0].should.deepEqual({ query: 'query1', params: { p1: 'param1' } });
+        builder.getQueries()[1].should.deepEqual({ query: 'query2', params: [{ p2: 'param2' }] });
+      });
     });
   });
 });
