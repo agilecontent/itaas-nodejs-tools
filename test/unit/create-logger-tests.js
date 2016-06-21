@@ -4,7 +4,7 @@ const intercept = require('intercept-stdout');
 const fs = require('fs');
 const should = require('should');
 const _ = require('lodash');
-const tools = require('../lib/index');
+const tools = require('../../lib/index');
 
 describe('.createLogger', function () {
   it('should create a rotating-file logger', function (done) {

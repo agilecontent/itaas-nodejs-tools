@@ -2,7 +2,7 @@
 /* global describe, it*/
 
 const should = require('should');
-const tools = require('../lib/index');
+const tools = require('../../lib/index');
 
 describe('.uuid', function () {
   describe('.isUuid', function () {

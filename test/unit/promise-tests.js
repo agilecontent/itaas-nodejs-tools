@@ -3,7 +3,7 @@
 
 const assert = require('assert');
 const _ = require('lodash');
-const tools = require('../lib/index');
+const tools = require('../../lib/index');
 
 describe('.promise', function () {
   describe('.any', function () {

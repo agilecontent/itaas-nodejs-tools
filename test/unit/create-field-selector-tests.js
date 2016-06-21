@@ -1,7 +1,7 @@
 'use strict';
 /* global describe,it */
 
-const tools = require('../lib/index');
+const tools = require('../../lib/index');
 const should = require('should'); // eslint-disable-line no-unused-vars
 
 describe('.createFieldSelector', function () {

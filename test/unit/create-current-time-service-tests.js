@@ -2,7 +2,7 @@
 /* global describe, it*/
 
 const should = require('should');
-const tools = require('../lib/index');
+const tools = require('../../lib/index');
 
 describe('.createCurrentTimeService', function () {
   it('build an instance', function (done) {
@@ -15,7 +15,7 @@ describe('.createCurrentTimeService', function () {
   describe('.createCurrentTimeService', function () {
     it('build an instance', function (done) {
       let currentTimeService = tools.createCurrentTimeService();
-      
+
       let date = currentTimeService.getNow();
 
       date.should.be.Date();

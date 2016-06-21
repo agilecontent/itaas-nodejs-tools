@@ -2,7 +2,7 @@
 /* global describe, it*/
 
 let should = require('should');
-let tools = require('../lib/index');
+let tools = require('../../lib/index');
 
 
 describe('.createServiceLocator', function () {

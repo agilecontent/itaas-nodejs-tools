@@ -3,7 +3,7 @@
 
 const should = require('should');
 const uuid = require('uuid').v4;
-const tools = require('../lib/index');
+const tools = require('../../lib/index');
 
 let callId = uuid();
 let config = { key: 'value' };

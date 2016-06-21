@@ -8,7 +8,7 @@ const express = require('express');
 const request = require('request');
 const uuid = require('uuid').v4;
 
-const tools = require('../lib/index');
+const tools = require('../../lib/index');
 
 let config = { key: 'value' };
 let logger = tools.createLogger({
