@@ -31,5 +31,5 @@ module.exports.cassandra = {};
 module.exports.cassandra.createFacade = require('./cassandra/cassandra-facade').createFacade;
 module.exports.cassandra.createBatchQueryBuilder = require('./cassandra/batch-query-builder').create;
 module.exports.cassandra.converter = {};
-module.exports.cassandra.converter.map = require('./cassandra/map-converter');
-module.exports.cassandra.converter.uuid = require('./cassandra/uuid-converter');
+module.exports.cassandra.converter.Map = require('./cassandra/map-converter');
+module.exports.cassandra.converter.Uuid = require('./cassandra/uuid-converter');

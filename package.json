@@ -6,7 +6,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "test": "mocha --recursive -c test",
-    "test-debug": "mocha --debug-brk=5858 --recursive test",
+    "test-debug": "mocha --recursive -c --debug-brk=5858 test",
     "lint": "eslint .",
     "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --recursive -R dot -c",
     "nodemon": "nodemon --exec \"npm run lint && npm test && npm run coverage\""
@@ -29,6 +29,7 @@
     "cassandra-driver": "^3.0.2",
     "lodash": "^4.13.1",
     "mkdirp": "^0.5.1",
+    "moment": "^2.13.0",
     "morgan": "^1.7.0",
     "uuid": "^2.0.2"
   },
@@ -38,6 +39,7 @@
     "intercept-stdout": "^0.1.2",
     "istanbul": "^0.4.3",
     "mocha": "^2.5.3",
+    "nodemon": "^1.9.2",
     "request": "^2.72.0",
     "should": "^9.0.1"
   },
