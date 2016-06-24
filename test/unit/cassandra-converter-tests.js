@@ -8,7 +8,7 @@ const Uuid = require('cassandra-driver').types.Uuid;
 describe('.converter.map', function () {
   describe('.mapToArray', function () {
     it('create correct array', function (done) {
-      let MapConverter = tools.cassandra.converter.Map;
+      let MapConverter = tools.cassandra.converter.map;
 
       let map = {
         myId1: { myKey11: 'MyValue11', myKey12: 'MyValue12' },
@@ -27,7 +27,7 @@ describe('.converter.map', function () {
     });
 
     it('throws error because bad map', function (done) {
-      let MapConverter = tools.cassandra.converter.Map;
+      let MapConverter = tools.cassandra.converter.map;
 
       should.throws(() => {
         let myMap = undefined;
@@ -63,7 +63,7 @@ describe('.converter.map', function () {
     });
 
     it('throws error because bad id', function (done) {
-      let MapConverter = tools.cassandra.converter.Map;
+      let MapConverter = tools.cassandra.converter.map;
       let myMap = {
         myId1:
         {
@@ -114,7 +114,7 @@ describe('.converter.map', function () {
 
   describe('.arrayToMap', function () {
     it('create correct map', function (done) {
-      let MapConverter = tools.cassandra.converter.Map;
+      let MapConverter = tools.cassandra.converter.map;
 
       let map = {
         myId1: { myKey11: 'MyValue11', myKey12: 'MyValue12' },
@@ -133,7 +133,7 @@ describe('.converter.map', function () {
     });
 
     it('throws error because bad array', function (done) {
-      let MapConverter = tools.cassandra.converter.Map;
+      let MapConverter = tools.cassandra.converter.map;
 
       should.throws(() => {
         let myArray = undefined;
@@ -169,7 +169,7 @@ describe('.converter.map', function () {
     });
 
     it('throws error because bad id', function (done) {
-      let MapConverter = tools.cassandra.converter.Map;
+      let MapConverter = tools.cassandra.converter.map;
 
       let array = [
         { myId: 'myId1', myKey11: 'MyValue11', myKey12: 'MyValue12' },
@@ -219,7 +219,7 @@ describe('.converter.map', function () {
 describe('.converter.uuid', function () {
   describe('.uuidToString', function () {
     it('create correct string', function (done) {
-      let UuidConverter = tools.cassandra.converter.Uuid;
+      let UuidConverter = tools.cassandra.converter.uuid;
 
       let uuidAsString = '47c7630c-a54f-4893-abd0-e5fe5ce9eaac';
       let uuidAsUuid = Uuid.fromString(uuidAsString);
@@ -231,7 +231,7 @@ describe('.converter.uuid', function () {
     });
 
     it('throws error because bad uuid', function (done) {
-      let UuidConverter = tools.cassandra.converter.Uuid;
+      let UuidConverter = tools.cassandra.converter.uuid;
 
       should.throws(() => {
         let uuid = '47c7630c-a54f-4893-abd0-e5fe5ce9eaac';
@@ -279,7 +279,7 @@ describe('.converter.uuid', function () {
 
   describe('.stringToUuid', function () {
     it('create correct uuid', function (done) {
-      let UuidConverter = tools.cassandra.converter.Uuid;
+      let UuidConverter = tools.cassandra.converter.uuid;
 
       let uuidAsString = '47c7630c-a54f-4893-abd0-e5fe5ce9eaac';
       let uuidAsUuid = Uuid.fromString(uuidAsString);
@@ -291,7 +291,7 @@ describe('.converter.uuid', function () {
     });
 
     it('throws error because bad string', function (done) {
-      let UuidConverter = tools.cassandra.converter.Uuid;
+      let UuidConverter = tools.cassandra.converter.uuid;
 
       should.throws(() => {
         let uuidAsString = '47c7630c-a54f-4893-abd0-e5fe5ce9eaac465465';
