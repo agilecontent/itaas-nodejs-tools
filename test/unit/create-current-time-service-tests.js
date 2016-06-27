@@ -1,27 +1,31 @@
 'use strict';
 /* global describe, it*/
 
-const should = require('should');
+const should = require('should'); // eslint-disable-line no-unused-vars
 const tools = require('../../lib/index');
 
 describe('.createCurrentTimeService', function () {
-  it('build an instance', function (done) {
+  it('returns current date', function (done) {
     let currentTimeService = tools.createCurrentTimeService();
 
-    should.exists(currentTimeService);
+    let date = currentTimeService.getNow();
+
+    date.should.be.Date();
+    (currentTimeService.getNow() - new Date()).should.below(50);
 
     done();
   });
-  describe('.createCurrentTimeService', function () {
-    it('build an instance', function (done) {
-      let currentTimeService = tools.createCurrentTimeService();
+  it('returns date between before and after new Date()', function () {
+    let timeService = tools.createCurrentTimeService();
 
-      let date = currentTimeService.getNow();
+    let beforeAsTimestamp = new Date().getTime();
 
-      date.should.be.Date();
-      (currentTimeService.getNow() - new Date()).should.below(50);
+    let now = timeService.getNow();
+    now.should.be.Date();
+    let nowAsTimestamp = now.getTime();
 
-      done();
-    });
+    let afterAsTimestamp = new Date().getTime();
+
+    nowAsTimestamp.should.be.aboveOrEqual(beforeAsTimestamp).and.belowOrEqual(afterAsTimestamp);
   });
 });
