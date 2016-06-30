@@ -101,5 +101,13 @@ describe('.promise', function () {
           done();
         }).catch(done);
     });
+    it('resolve when not a promise', function (done) {
+      let notPromise1 = 1;
+
+      tools.promise.any([notPromise1]).then((value) => {
+        assert(value, 1);
+        done();
+      }).catch(done);
+    });
   });
 });

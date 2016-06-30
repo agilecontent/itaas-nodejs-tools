@@ -13,8 +13,15 @@ describe('.createBaseResponse', function () {
     should.deepEqual(response.result, { a: 1, b: 2 });
     should.not.exist(response.error);
 
-    let response2 = tools.createBaseResponse('OK');
-    should.equal(response2.message, '');
+    let response2 = tools.createBaseResponse('OK', 'The request is OK', null, { a: 1, b: 2 });
+
+    should.equal(response2.status, 'OK');
+    should.equal(response2.message, 'The request is OK');
+    should.deepEqual(response2.error, { a: 1, b: 2 });
+    should.not.exist(response2.result);
+
+    let response3 = tools.createBaseResponse('OK', 'The request is OK');
+    should.equal(response3.message, 'The request is OK');
 
     done();
   });
@@ -24,6 +31,9 @@ describe('.createBaseResponse', function () {
     });
     should.throws(() => {
       tools.createBaseResponse(undefined, 'The request is OK', { a: 1, b: 2 });
+    });
+    should.throws(() => {
+      tools.createBaseResponse('OK');
     });
 
     done();

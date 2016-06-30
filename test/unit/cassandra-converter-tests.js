@@ -173,7 +173,7 @@ describe('.converter.map', function () {
 
       let array = [
         { myId: 'myId1', myKey11: 'MyValue11', myKey12: 'MyValue12' },
-        { myId: 'myId2', myKey21: 'MyValue21', myKey22: 'MyValue22', myKey23: 'MyValue23' }
+        { myId2: 'myId2', myKey21: 'MyValue21', myKey22: 'MyValue22', myKey23: 'MyValue23' }
       ];
 
       should.throws(() => {
@@ -200,6 +200,11 @@ describe('.converter.map', function () {
         let myKey = '';
         MapConverter.arrayToMap(array, myKey);
       }, 'myKey=empty should generate exception');
+
+      should.throws(() => {
+        let myKey = 'myId';
+        MapConverter.arrayToMap(array, myKey);
+      }, 'myKey="myId" should generate exception because not all items have key');
 
       should.throws(() => {
         let myKey = 9;

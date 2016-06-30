@@ -31,9 +31,9 @@ describe('.express', function () {
 
       //Middleware
       app.use(tools.express.createCallContextMiddleware(
-        () => app.locals.config,
-        () => app.locals.logger,
-        () => app.locals.serviceLocator,
+        app.locals.config,
+        app.locals.logger,
+        app.locals.serviceLocator,
         (req, res, context) => { res.locals.context = context; }));
 
       //Route
@@ -66,9 +66,9 @@ describe('.express', function () {
 
       //Middleware
       app.use(tools.express.createCallContextMiddleware(
-        () => app.locals.config,
-        () => app.locals.logger,
-        () => app.locals.serviceLocator,
+        app.locals.config,
+        app.locals.logger,
+        app.locals.serviceLocator,
         (req, res, context) => { res.locals.context = context; }));
 
       //Route
@@ -111,9 +111,9 @@ describe('.express', function () {
 
       //Middlewares
       app.use(tools.express.createCallContextMiddleware(
-        () => app.locals.config,
-        () => app.locals.logger,
-        () => app.locals.serviceLocator,
+        app.locals.config,
+        app.locals.logger,
+        app.locals.serviceLocator,
         (req, res, context) => { res.locals.context = context; }));
 
       app.use(tools.express.createMorganMiddleware(
@@ -157,9 +157,9 @@ describe('.express', function () {
 
       //Middlewares
       app.use(tools.express.createCallContextMiddleware(
-        () => app.locals.config,
-        () => app.locals.logger,
-        () => app.locals.serviceLocator,
+        app.locals.config,
+        app.locals.logger,
+        app.locals.serviceLocator,
         (req, res, context) => { res.locals.context = context; }));
 
       app.use(tools.express.createMorganMiddleware(
@@ -202,9 +202,9 @@ describe('.express', function () {
 
       //Middlewares
       app.use(tools.express.createCallContextMiddleware(
-        () => app.locals.config,
-        () => app.locals.logger,
-        () => app.locals.serviceLocator,
+        app.locals.config,
+        app.locals.logger,
+        app.locals.serviceLocator,
         (req, res, context) => { res.locals.context = context; }));
 
       app.use(tools.express.createMorganMiddleware(
@@ -263,7 +263,7 @@ describe('.express', function () {
 
       request('http://127.0.0.1:3001?q1=Test1&Q2=Test2', (error, response, body) => {
         server.close();
-        
+
         should.not.exist(error);
         should.equal(body, 'OK');
 

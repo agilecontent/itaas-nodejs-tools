@@ -25,13 +25,13 @@
     "itaas"
   ],
   "dependencies": {
-    "bunyan": "^1.8.1",
-    "cassandra-driver": "^3.0.2",
-    "lodash": "^4.13.1",
-    "mkdirp": "^0.5.1",
-    "moment": "^2.13.0",
-    "morgan": "^1.7.0",
-    "uuid": "^2.0.2"
+    "bunyan": "1.8.1",
+    "cassandra-driver": "3.0.2",
+    "lodash": "4.13.1",
+    "mkdirp": "0.5.1",
+    "moment": "2.13.0",
+    "morgan": "1.7.0",
+    "uuid": "2.0.2"
   },
   "devDependencies": {
     "eslint": "^2.11.1",

@@ -4,28 +4,35 @@
 const should = require('should');
 const tools = require('../../lib/index');
 
-describe('.createBatchQueryBuilder', function () {
-  it('create correct objects array', function (done) {
-    let builder = tools.cassandra.createBatchQueryBuilder();
+describe('.cassandra', function () {
+  describe('.createBatchQueryBuilder', function () {
+    it('creates a cassandra batch query builder', function () {
+      let builder = tools.cassandra.createBatchQueryBuilder();
+      should.exist(builder);
+      should.exist(builder.add);
+      should.exist(builder.getQueries);
+    });
+  });
+  describe('.add', function () {
+    it('add new query with parameters', function () {
+      let builder = tools.cassandra.createBatchQueryBuilder();
 
-    let arrayResult = [
-      {
-        query: 'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value3\');',
-        params: { id: '3' }
-      },
-      {
-        query: 'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value4\');',
-        params: { id: '4' }
-      }
-    ];
+      builder.add('query1', { p1: 'param1' });
+      builder.add('query2', [{ p2: 'param2' }]);
 
-    builder.add(arrayResult[0].query, arrayResult[0].params);
-    builder.add(arrayResult[1].query, arrayResult[1].params);
+      builder.queries[0].should.deepEqual({ query: 'query1', params: { p1: 'param1' } });
+      builder.queries[1].should.deepEqual({ query: 'query2', params: [{ p2: 'param2' }] });
+    });
+  });
+  describe('.getQueries', function () {
+    it('get queries after add them', function () {
+      let builder = tools.cassandra.createBatchQueryBuilder();
 
-    let queriesResult = builder.getQueries();
+      builder.add('query1', { p1: 'param1' });
+      builder.add('query2', [{ p2: 'param2' }]);
 
-    should.deepEqual(queriesResult, arrayResult);
-
-    done();
+      builder.getQueries()[0].should.deepEqual({ query: 'query1', params: { p1: 'param1' } });
+      builder.getQueries()[1].should.deepEqual({ query: 'query2', params: [{ p2: 'param2' }] });
+    });
   });
 });
