@@ -1,0 +1,7 @@
+language: node_js
+node_js:
+  - "4.4.5"
+services:
+  - docker
+install: ./scripts/travis-step-install.sh
+script: ./scripts/travis-step-script.sh
