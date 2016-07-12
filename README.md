@@ -3,42 +3,72 @@
 ## List of contents
 ---------------------
    
- * Introduction
- * Developers! Read it before everything explodes
- * Basic Tools
- * Helpers
- * Express tools
- * Promise
- * Cassandra
+ * [Introduction](#introduction)
+ * [Developers! Read it before everything explodes](#developers-read-it-before-everything-explodes)
+ * [API Tools](#api-tools)
+   * [createLogger](#createlogger)
+   * [createCallContext](#createcallcontext)
+   * [createServiceLocator](#createservicelocator)
+   * [createFieldSelector](#createfieldselector)
+   * [createBaseResponse](#createbaseresponse)
+   * [createFixedTimeService](#createfixedtimeservice)
+   * [createCurrentTimeService](#createcurrenttimeservice)
+   * [number](#number)
+   * [uuid](#uuid)
+   * [date](#date)
+   * [express.createCallContextMiddleware](#expresscreatecallcontextmiddleware)
+   * [express.createMorganMiddleware](#expresscreatemorganmiddleware)
+   * [express.createLowercaseQueryMiddleware](#expresscreatelowercasequerymiddleware)
+   * [promise.any](#promiseany)
+   * [cassandra.cql](#cassandracql)
+   * [cassandra.createBatchQueryBuilder](#cassandracreatebatchquerybuilder)
+   * [cassandra.converter.map](#cassandraconvertermap)
+   * [cassandra.converter.uuid](#cassandraconverteruuid)
 
 ---------------------
 
 ## Introduction
+This module should be used in ITaaS projects in order to simplify common things:
 
-This module should be used in every ITaaS module in order to make your work more simple :
-
-The first step is install it.
-After you need to import to your project
+You should only install and use it.
+```bash
+$ npm install https://github.com/UUX-Brasil/itaas-nodejs-tools.git#master --save
+```
 
 ## Developers! Read it before everything explodes 
 
 This library have some rules:
 - **Freedom**: Everyone is free to pull request
 - **Dependencies**: Only really important things should be here. Don't use it to add more dependencies to your project. Useless dependencies are not fun!
-- **Test**: You also are responsible for test everything. Current we have 100% of code coverage. Do not think to PR here if coverage will be less than it 
+- **Test**: You also are responsible for testing everything. Currently we have 100% of code coverage. Do not think to PR here if coverage will be less than it 
 - **Documentation**: Keep the documentation updated and in English
 
-## Basic Tools
+To contribute, clone this project and procedure with known commands:
+```bash
+$ npm clone (this github repository URL)
+$ cd itaas-nodejs-tools
+$ npm install
+```
 
-### Logger
+Before run tests, there is a file which configures where is your cassandra. "(itaas-nodejs-tools folder)/test/integration".
+If you are in a linux machine and it has docker, you can just run the following command:
+
+```bash
+$ docker run -p 9042:9042 --name DB -d cassandra:2.2.5
+```
+
+## API Tools
+
+### createLogger
+This method create a Bunyan logger.
 All options should be send inside an object sent on createLogger method:
 
 | Property     | Possible Value                                       | Default Value                        |
 | ------------ | ---------------------------------------------------- | ------------------------------------ |
-| name         | (string)                                               | 'app log name'                       |
+| name         | (string)                                             | 'app log name'                       |
 | logLevels    | 'fatal' , 'error' , 'warn', 'info', 'debug', 'trace' | [ 'fatal', 'error', 'warn', 'info' ] |
 | logOutput    | 'rotating-file' , 'standard-streams'                 | 'standard-streams'                   |
-| logDirectory | (string)                                               | './logs/test-log-dir'                |
+| logDirectory | (string)                                             | './logs/test-log-dir'                |
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
@@ -55,7 +85,8 @@ let logger = tools.createLogger({
 });
 ```
 
-### Service Locator
+### createServiceLocator
+Service Locator is our dependency injection tool. The main function is allow you to implement inversion of control for resolving dependencies. 
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
@@ -68,21 +99,31 @@ serviceLocator.addService('my-service-type', 'my-service');
 serviceLocator.getService('my-service-type'); 
 ```
 
-### Call Context
+### createCallContext
+Call Context is one of the most important concepts on ITaaS components. 
+A Call Context concentrates the useful things in a call. It receives:
+
+| Parameter      | Mandatory | Definition                                                                               |
+| -------------- | --------- | ---------------------------------------------------------------------------------------- |
+| callId         | true      | a unique id to call                                                                      |
+| config         | true      | your app configurations.                                                                 |
+| logger         | true      | your app logger. Also check [createLogger](#createlogger)                                |
+| serviceLocator | true      | your dependency injection tool. Also check [createServiceLocator](#createservicelocator) |
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 const uuid = require('uuid').v4;
 
 let callId = uuid();
-let config = '{ key: "value" }';
+let config = { key: "value" };
 let logger = tools.createLogger();
 let serviceLocator = tools.createServiceLocator();
 let context = tools.createCallContext(callId, config, logger, serviceLocator);
 ```
 
-### Create Field Selector
-This is a tool to clean object in order to select only desired fields 
+### createFieldSelector
+This is a tool to clean object in order to select only desired fields. It is really useful to return only desired values
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 let source = {
@@ -101,6 +142,7 @@ let source = {
 
 let selector = tools.createFieldSelector('address.city,actors');
 let selection = selector.select(source); 
+
 /* *********************
  * Result
  * *********************
@@ -116,25 +158,25 @@ let selection = selector.select(source);
  * *********************/
 ```
 
-### Create Base Response
+### createBaseResponse
 This class should be used to return all responses. Please does not change/add any attribute from it. This will allow the build from typed languages clients easier
 
-| Property     | Mandatory |
-| ------------ | --------- |
-| status       | true      |
-| message      | true      |
-| result       | false     |
-| error        | false     |
-
+| Property     | Mandatory | Definition                               |
+| ------------ | --------- | ---------------------------------------- |
+| status       | true      | Mnemonic Message.                        |
+| message      | true      | Descritive message.                      |
+| result       | false     | Result from call. It should be an object |
+| error        | false     | Error from call. It should be an object  |
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 let response = tools.createBaseResponse('MNEMONIC_MESSAGE', 'Descritive message from result', { a: 1, b: 2 });
+
 /* *********************
  * Result
  * *********************
 {
-  'status' : 'MNEMONIC_MESSAGE (Mandatory)',
+  'status' : 'MNEMONIC_MESSAGE',
   'message' : 'Descritive message from result',
   'result' : { a: 1, b: 2 },
   'error' : undefined
@@ -142,33 +184,38 @@ let response = tools.createBaseResponse('MNEMONIC_MESSAGE', 'Descritive message 
  * *********************/
 ```
 
-### Fixed Time Service
-To allow tests, it creates a fixed time 
+### createFixedTimeService
+It creates a service which responds a fixed date
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 let fixedDate = new Date('2016-06-27 04:54:32Z');
 let fixedTimeService = tools.createFixedTimeService(fixedDate);
 console.log(fixedTimeService.getNow());
+
 /* *********************
  * Result : '2016-06-27 04:54:32Z' (as date)
  * *********************/
 ```
 
-### Current Time Service
-To allow tests, it creates a fixed time
+### createCurrentTimeService
+It creates a service which responds the current date
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 tools.createCurrentTimeService();
 console.log(fixedTimeService.getNow());
+
 /* *********************
  * Result : current date
  * *********************/
 ```
 
-## Helpers
-### Number
+### number
+It is a handy number helper. You can parse and validate.
+
 Parsing
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 tools.number.parseInt32('-2147483648');
@@ -178,6 +225,7 @@ tools.number.parseInt32('a');
 // Result :  throws Exception
 ```
 Validating
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 tools.number.isInt32('-2147483648')
@@ -189,7 +237,9 @@ tools.number.isInt32('1.2');
 // Result :  false
 ```
 
-### UUID (GUID)
+### uuid
+It is a handy uuid helper. You can validate.
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 tools.uuid.isUuid('6423df02-340c-11e6-ac61-9e71128cae77')
@@ -201,8 +251,11 @@ tools.uuid.isUuid('50e65cab-5229-4612-957b-4ea59851ecbaaaaaaaasdasdasdsa');
 // Result :  false
 ```
 
-### Date
+### date
+It is a handy date helper. You can parse and validate.
+
 Parsing
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
@@ -216,6 +269,7 @@ tools.date.parseDate(undefined);
 ```
 
 Validating
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
@@ -228,8 +282,20 @@ tools.date.isDate(undefined);
 // Result: false
 ```
 
-## Express Tools
-### Call Context Middleware
+## API Tools - Express
+
+### express.createCallContextMiddleware
+This Middleware creates a default CallContext from the current call. 
+It by default checks if there is a call id on header, if not creates a new one. 
+It also creates a child log.
+
+| Property       | Mandatory | Definition                                                                                                           |
+| -------------- | --------- | -------------------------------------------------------------------------------------------------------------------- |
+| config         | true      | Your configuration object                                                                                                   |
+| logger         | true      | Bunyan logger. Also check [createLogger](#createlogger)                                                              |
+| serviceLocator | true      | Dependency Injection class. Also check [createServiceLocator](#createservicelocator)                                 |
+| setContext     | true      | Method to set new Call Context. Express recomends usage of [res.locals](http://expressjs.com/en/api.html#res.locals) |
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 tools.express.createCallContextMiddleware(
@@ -239,22 +305,36 @@ tools.express.createCallContextMiddleware(
         (req, res, context) => { res.locals.context = context; }));
 ```
 
-### Morgan Middleware
+### express.createMorganMiddleware
+[Morgan](https://github.com/expressjs/morgan) is a HTTP request logger middleware. 
+But as we use a custom logger ([Bunyan](https://github.com/trentm/node-bunyan)), we have wrapped the Morgan and we use it only for get HTTP request. 
+Using express.createMorganMiddleware it records HTTP request and logs in Bunyan info       
+
+| Property       | Mandatory | Definition                                                                                                                |
+| -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------- |
+| getLogger      | true      | Function to get correct logger                                                                                            |
+| format         | true      | Desired Morgan format. Check available formats on [Morgan Github](https://github.com/expressjs/morgan#predefined-formats) |
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger, 'common'));
 ```
 
-### Lower case query Middleware
+### express.createLowercaseQueryMiddleware
+Express is query case-sensitive. In order to avoid it, this middleware changes all query parameters to lowercase. 
+E.g.: www.myapi.com/contents?Query1=x&queryTwo=y. It will be available to controllers the query 'query1' and 'querytwo'. 
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 tools.express.createLowercaseQueryMiddleware()
 ```
 
-## Promise Tools
+## API Tools - Promise 
+### promise.any
+Promise.then will be executed if any function run successfully. 
+If none catch block will be called.
 
-### Promise.any
 ```javascript
 const tools = require('itaas-nodejs-tools');
 let promise1 = Promise.resolve(1);
@@ -265,11 +345,19 @@ tools.promise.any([promise1, promise2, promise3])
   .then(myFunction);
 ```
 
-## Cassandra Tools
+## API Tools - Cassandra
 
-### CQL Helper Methods
+### cassandra.cql
+It is a helper class which specify a little more the result from 'execute' function from cassandra driver  
 
 #### canConnect() 
+Check if there is a connection between your client and a cassandra database. It does not check if keyspace was created.
+
+| Property       | Mandatory | Definition                                                                                       |
+| -------------- | --------- | ------------------------------------------------------------------------------------------------ |
+| callContext    | true      | Call Context. Also check [callContext](#createCallContext)                                       |                                            |
+| cassandraClient| true      | Your Cassandra Client. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |                 
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
@@ -280,39 +368,71 @@ let canConnect = queryRunner.canConnect(callContext, cassandraClient)
 ```
 
 #### executeQuery() 
-```javascript
-const tools = require('itaas-nodejs-tools');
+Execute a query (SELECT) on Cassandra. It returns an array with result
 
-let cassandraClient; // = you will need to create a cassandra client. It must be one for application
-let cql = 'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value5\');';
-let param = { id: '5' };
-let queryRunner = tools.cassandra.cql;
-queryRunner.executeNonQuery(callContext, cassandraClient, cql, param)
-if(result){ /* Insert done*/ }
-```
+| Property        | Mandatory | Definition                                                                                                                        |
+| --------------  | --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| callContext     | true      | Call Context. Also check [callContext](#createCallContext)                                                                        |
+| cassandraClient | true      | Your Cassandra Client. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                                   |
+| cql             | true      | Desired query to be executed. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                            |
+| parameters      | false     | Key-value pair object containing parameters from query. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |
+| routingNameArray| false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html)
 
-#### executeNonQuery() 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
 let cassandraClient; // = you will need to create a cassandra client. It must be one for application
 let cql = 'SELECT * FROM testtable where testid = :id;';
-let param = { id: '5' };
+let parameters = { id: '5' };
 let queryRunner = tools.cassandra.cql;
-queryRunner.executeQuery(callContext, cassandraClient, cql, param);
+queryRunner.executeQuery(callContext, cassandraClient, cql, parameters);
+
 /* *********************
  * Result
  * *********************
 [
-	{
-		'testid': '5',
-		'value': 'my-value5'
-	}
+  {
+    'testid': '5',
+    'value': 'my-value5'
+  }
 ]
  * *********************/
- ```
+```
+
+#### executeNonQuery() 
+Execute a NonQuery (E.g.: INSERT, DELETE) on Cassandra. It returns a boolean with the result.
+It also check result in case of "IF EXISTS / IF NOT EXISTS" clause to return correct boolean.
+
+| Property        | Mandatory | Definition                                                                                                                        |
+| --------------  | --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| callContext     | true      | Call Context. Also check [callContext](#createCallContext)                                                                        |
+| cassandraClient | true      | Your Cassandra Client. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                                   |
+| cql             | true      | Desired query to be executed. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                            |
+| parameters      | false     | Key-value pair object containing parameters from query. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |
+| routingNameArray| false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html)
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+
+let cassandraClient; // = you will need to create a cassandra client. It must be one for application
+let cql = 'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value5\');';
+let parameters = { id: '5' };
+let queryRunner = tools.cassandra.cql;
+queryRunner.executeNonQuery(callContext, cassandraClient, cql, parameters)
+if(result){ /* Insert done*/ }
+```
 
 #### executeBatch() 
+A batch statement on cassandra combines more than one DML statement (INSERT, UPDATE, DELETE) into a single logical operation. 
+For further information, check [Cassandra Batch Page](https://docs.datastax.com/en/cql/3.3/cql/cql_reference/batch_r.html).
+This method executes batch statement.
+
+| Property        | Mandatory | Definition                                                                                                                             |
+| --------------  | --------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| callContext     | true      | Call Context. Also check [callContext](#createCallContext)                                                                             |
+| cassandraClient | true      | Your Cassandra Client. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                                        |
+| builderQueries  | true      | Key-value pair object containing query and parameters. To make it easier check [Batch Query Buider](cassandra.createBatchQueryBuilder) |
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
@@ -332,7 +452,21 @@ let queryRunner = tools.cassandra.cql;
 queryRunner.executeBatch(callContext, cassandraClient, builder.getQueries())
 ```
 
-### Batch Query Builder
+### cassandra.createBatchQueryBuilder
+To execute batch statement, cassandra asks for a particular object format. 
+To make it easier, use this method and insert new queries. 
+After all, use getQueries() to generate desired object, sending it to [executeBatch()](#executeBatch)  
+
+#### add
+| Property        | Mandatory | Definition                                                                                                                        |
+| --------------  | --------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| cql             | true      | Desired query to be executed. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                            |
+| parameters      | false     | Key-value pair object containing parameters from query. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |
+
+#### getQueries
+Generates object to batch statement (is the same as client.batch from 
+[Datastax Cassandra Driver](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/batchStatements.html))
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
@@ -347,6 +481,7 @@ builder.add(
 );
 
 console.log(builder.getQueries());
+
 /* *********************
  * Result
  * *********************
@@ -363,8 +498,11 @@ console.log(builder.getQueries());
  * *********************/
 ```
 
-### Map Converter
-Map -> Array
+### cassandra.converter.map
+
+#### mapToArray
+Converts a Map to Array
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 let MapConverter = tools.cassandra.converter.map;
@@ -374,6 +512,7 @@ let map = {
   myId2: { myKey21: 'MyValue21', myKey22: 'MyValue22', myKey23: 'MyValue23' }
 };
 MapConverter.mapToArray(map, 'myId');
+
 /* *********************
  * Result
  * *********************
@@ -384,7 +523,9 @@ MapConverter.mapToArray(map, 'myId');
  * *********************/
 ```
 
-Array -> Map
+#### arrayToMap
+Converts an Array to Map
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 let MapConverter = tools.cassandra.converter.map;
@@ -395,6 +536,7 @@ let array = [
 ];
 
 let arrayToMapResult = MapConverter.arrayToMap(array, 'myId');
+
 /* *********************
  * Result
  * *********************
@@ -404,7 +546,10 @@ let arrayToMapResult = MapConverter.arrayToMap(array, 'myId');
 };
  * *********************/
 ```
-### UUID Converter
+### cassandra.converter.uuid
+#### uuidToString
+Converts an UUID to string
+
 ```javascript
 const tools = require('itaas-nodejs-tools');
 let UuidConverter = tools.cassandra.converter.uuid;
@@ -412,6 +557,14 @@ let UuidConverter = tools.cassandra.converter.uuid;
 let uuidAsUuid = Uuid.fromString('47c7630c-a54f-4893-abd0-e5fe5ce9eaac');
 let uuidResult = UuidConverter.uuidToString(uuidAsUuid);
 // Result: '47c7630c-a54f-4893-abd0-e5fe5ce9eaac' as string
+```
+
+#### stringToUuid
+Converts a string to UUID
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+let UuidConverter = tools.cassandra.converter.uuid;
 
 let uuidResult = UuidConverter.stringToUuid('47c7630c-a54f-4893-abd0-e5fe5ce9eaac');
 // Result: '47c7630c-a54f-4893-abd0-e5fe5ce9eaac' as UUID
