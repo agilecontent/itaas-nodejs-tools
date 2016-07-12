@@ -89,14 +89,19 @@ let logger = tools.createLogger({
 Service Locator is our dependency injection tool. The main function is allow you to implement inversion of control for resolving dependencies. 
 
 ```javascript
+class MyClass{
+  myMethod(){
+    return true;
+  }
+}
+
 const tools = require('itaas-nodejs-tools');
 let serviceLocator = tools.createServiceLocator();
 
-// Add Service. It index by anything but we recommend a string value
-serviceLocator.addService('my-service-type', 'my-service');
+serviceLocator.addService('my-service', new MyClass());
 
-// Returns 'my-service'
-serviceLocator.getService('my-service-type'); 
+console.log(serviceLocator.getService('my-service-type').myMethod());
+// Console: true
 ```
 
 ### createCallContext
@@ -353,15 +358,15 @@ It is a helper class which specify a little more the result from 'execute' funct
 #### canConnect() 
 Check if there is a connection between your client and a cassandra database. It does not check if keyspace was created.
 
-| Property       | Mandatory | Definition                                                                                       |
-| -------------- | --------- | ------------------------------------------------------------------------------------------------ |
-| callContext    | true      | Call Context. Also check [callContext](#createCallContext)                                       |                                            |
-| cassandraClient| true      | Your Cassandra Client. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |                 
+| Property       | Mandatory | Definition                                                                                                                       |
+| -------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| callContext    | true      | Call Context. Also check [callContext](#createCallContext)                                                                       | 
+| cassandraClient| true      | Your Cassandra Client. It must be one for application. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |                 
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
-let cassandraClient; // = you will need to create a cassandra client. It must be one for application
+let cassandraClient = yourCassandraClient; 
 let queryRunner = tools.cassandra.cql;
 let canConnect = queryRunner.canConnect(callContext, cassandraClient)
 // If could connect, canConnect = true
@@ -373,15 +378,15 @@ Execute a query (SELECT) on Cassandra. It returns an array with result
 | Property        | Mandatory | Definition                                                                                                                        |
 | --------------  | --------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | callContext     | true      | Call Context. Also check [callContext](#createCallContext)                                                                        |
-| cassandraClient | true      | Your Cassandra Client. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                                   |
+| cassandraClient | true      | Your Cassandra Client. It must be one for application. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)   |
 | cql             | true      | Desired query to be executed. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                            |
 | parameters      | false     | Key-value pair object containing parameters from query. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |
-| routingNameArray| false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html)
+| routingNameArray| false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html) |
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
-let cassandraClient; // = you will need to create a cassandra client. It must be one for application
+let cassandraClient = yourCassandraClient; 
 let cql = 'SELECT * FROM testtable where testid = :id;';
 let parameters = { id: '5' };
 let queryRunner = tools.cassandra.cql;
@@ -406,20 +411,23 @@ It also check result in case of "IF EXISTS / IF NOT EXISTS" clause to return cor
 | Property        | Mandatory | Definition                                                                                                                        |
 | --------------  | --------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | callContext     | true      | Call Context. Also check [callContext](#createCallContext)                                                                        |
-| cassandraClient | true      | Your Cassandra Client. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                                   |
+| cassandraClient | true      | Your Cassandra Client. It must be one for application. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)   |
 | cql             | true      | Desired query to be executed. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                            |
 | parameters      | false     | Key-value pair object containing parameters from query. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |
-| routingNameArray| false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html)
+| routingNameArray| false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html)|
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
-let cassandraClient; // = you will need to create a cassandra client. It must be one for application
+let cassandraClient = yourCassandraClient;
 let cql = 'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value5\');';
 let parameters = { id: '5' };
 let queryRunner = tools.cassandra.cql;
 queryRunner.executeNonQuery(callContext, cassandraClient, cql, parameters)
-if(result){ /* Insert done*/ }
+if(!result){
+  throw new Error('Insert was not executed successfully');
+}
+/* Insert done*/
 ```
 
 #### executeBatch() 
@@ -430,13 +438,13 @@ This method executes batch statement.
 | Property        | Mandatory | Definition                                                                                                                             |
 | --------------  | --------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | callContext     | true      | Call Context. Also check [callContext](#createCallContext)                                                                             |
-| cassandraClient | true      | Your Cassandra Client. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                                        |
+| cassandraClient | true      | Your Cassandra Client. It must be one for application. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)        |
 | builderQueries  | true      | Key-value pair object containing query and parameters. To make it easier check [Batch Query Buider](cassandra.createBatchQueryBuilder) |
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
-let cassandraClient; // = you will need to create a cassandra client. It must be one for application
+let cassandraClient = yourCassandraClient;
 
 let builder = tools.cassandra.createBatchQueryBuilder();
 builder.add(
