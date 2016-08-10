@@ -50,12 +50,12 @@ $ cd itaas-nodejs-tools
 $ npm install
 ```
 
-Before run tests, there is a file which configures where is your cassandra. "(itaas-nodejs-tools folder)/test/integration".
-If you are in a linux machine and it has docker, you can just run the following command:
-
-```bash
-$ docker run -p 9042:9042 --name DB -d cassandra:2.2.5
-```
+By default, tests will run assuming there is a Cassandra in localhost (127.0.0.1). 
+Anyway, you can set environment variable `TEST_CASSANDRA_ENDPOINT` to desired Cassandra endpoint.
+> **Tip:** If you want to run a Cassandra endpoint using docker, use following command:
+> ```bash
+> $ docker run -p 9042:9042 --name DB -d cassandra:2.2.5
+> ```
 
 ## API Tools
 
@@ -332,7 +332,7 @@ E.g.: www.myapi.com/contents?Query1=x&queryTwo=y. It will be available to contro
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
-tools.express.createLowercaseQueryMiddleware()
+app.use(tools.express.createLowercaseQueryMiddleware());
 ```
 
 ## API Tools - Promise 
@@ -353,10 +353,10 @@ tools.promise.any([promise1, promise2, promise3])
 ## API Tools - Cassandra
 
 ### cassandra.cql
-It is a helper class which specify a little more the result from 'execute' function from cassandra driver  
+It is a helper class which specify a little more the result from 'execute' function from Cassandra driver  
 
 #### canConnect() 
-Check if there is a connection between your client and a cassandra database. It does not check if keyspace was created.
+Check if there is a connection between your client and a Cassandra database. It does not check if keyspace was created.
 
 | Property       | Mandatory | Definition                                                                                                                       |
 | -------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -431,7 +431,7 @@ if(!result){
 ```
 
 #### executeBatch() 
-A batch statement on cassandra combines more than one DML statement (INSERT, UPDATE, DELETE) into a single logical operation. 
+A batch statement on Cassandra combines more than one DML statement (INSERT, UPDATE, DELETE) into a single logical operation. 
 For further information, check [Cassandra Batch Page](https://docs.datastax.com/en/cql/3.3/cql/cql_reference/batch_r.html).
 This method executes batch statement.
 
@@ -461,7 +461,7 @@ queryRunner.executeBatch(callContext, cassandraClient, builder.getQueries())
 ```
 
 ### cassandra.createBatchQueryBuilder
-To execute batch statement, cassandra asks for a particular object format. 
+To execute batch statement, Cassandra asks for a particular object format. 
 To make it easier, use this method and insert new queries. 
 After all, use getQueries() to generate desired object, sending it to [executeBatch()](#executeBatch)  
 
