@@ -26,6 +26,7 @@
   ],
   "dependencies": {
     "bunyan": "1.8.1",
+    "cassandra-driver": "3.0.2",
     "lodash": "4.13.1",
     "mkdirp": "0.5.1",
     "moment": "2.13.0",
@@ -34,7 +35,6 @@
   },
   "devDependencies": {
     "eslint": "^2.11.1",
-    "cassandra-driver": "3.0.2",
     "express": "^4.13.4",
     "intercept-stdout": "^0.1.2",
     "istanbul": "^0.4.3",
