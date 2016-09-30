@@ -277,4 +277,35 @@ describe('.express', function () {
       });
     });
   });
+
+  describe('.createTrimQueryValueMiddleware', function () {
+    it('should remove spaces from start and end of query parameters', function (done) {
+      let app = express();
+
+      app.use(tools.express.createTrimQueryValueMiddleware());
+
+      let exposed = {};
+      app.use('/', (req, res, next) => {
+        exposed.query = req.query;
+        res.send('OK');
+      });
+
+      let server = app.listen(3001);
+
+      request('http://127.0.0.1:3001?q1=%20Test1%20&q2=Test2%20&q3=%20Test3', (error, response, body) => {
+        server.close();
+
+        should.not.exist(error);
+        should.equal(body, 'OK');
+
+        exposed.query.should.keys('q1', 'q2', 'q3');
+
+        should.deepEqual(exposed.query.q1, 'Test1');
+        should.deepEqual(exposed.query.q2, 'Test2');
+        should.deepEqual(exposed.query.q3, 'Test3');
+
+        done();
+      });
+    });
+  });  
 });
