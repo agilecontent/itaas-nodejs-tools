@@ -19,6 +19,7 @@
    * [express.createCallContextMiddleware](#expresscreatecallcontextmiddleware)
    * [express.createMorganMiddleware](#expresscreatemorganmiddleware)
    * [express.createLowercaseQueryMiddleware](#expresscreatelowercasequerymiddleware)
+   * [express.createTrimQueryValueMiddleware](#expresscreatetrimqueryvaluemiddleware)
    * [promise.any](#promiseany)
    * [cassandra.cql](#cassandracql)
    * [cassandra.createBatchQueryBuilder](#cassandracreatebatchquerybuilder)
@@ -333,6 +334,14 @@ E.g.: www.myapi.com/contents?Query1=x&queryTwo=y. It will be available to contro
 ```javascript
 const tools = require('itaas-nodejs-tools');
 app.use(tools.express.createLowercaseQueryMiddleware());
+```
+
+### express.createTrimQueryValueMiddleware
+This middleware remove start and end space characters from queryString values. 
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+app.use(tools.express.createTrimQueryValueMiddleware());
 ```
 
 ## API Tools - Promise 
