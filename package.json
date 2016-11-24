@@ -9,7 +9,8 @@
     "test-debug": "mocha --recursive -c --debug-brk=5858 test",
     "lint": "eslint .",
     "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --recursive -R dot -c",
-    "nodemon": "nodemon --exec \"npm run lint && npm test && npm run coverage\""
+    "nodemon": "nodemon --exec \"npm run lint && npm test && npm run coverage\"",
+    "unit-test": "mocha --recursive -c test/unit"
   },
   "repository": {
     "type": "git",
@@ -26,7 +27,6 @@
   ],
   "dependencies": {
     "bunyan": "1.8.1",
-    "cassandra-driver": "3.0.2",
     "lodash": "4.13.1",
     "mkdirp": "0.5.1",
     "moment": "2.13.0",
@@ -34,6 +34,7 @@
     "uuid": "2.0.2"
   },
   "devDependencies": {
+    "cassandra-driver": "3.0.2",
     "eslint": "^2.11.1",
     "express": "^4.13.4",
     "intercept-stdout": "^0.1.2",
