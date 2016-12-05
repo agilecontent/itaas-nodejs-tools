@@ -24,7 +24,6 @@
    * [cassandra.cql](#cassandracql)
    * [cassandra.createBatchQueryBuilder](#cassandracreatebatchquerybuilder)
    * [cassandra.converter.map](#cassandraconvertermap)
-   * [cassandra.converter.uuid](#cassandraconverteruuid)
 
 ---------------------
 
@@ -33,7 +32,7 @@ This module should be used in ITaaS projects in order to simplify common things:
 
 You should only install and use it.
 ```bash
-$ npm install https://github.com/UUX-Brasil/itaas-nodejs-tools.git#master --save
+$ npm install https://github.com/UUX-Brasil/itaas-nodejs-tools.git#1.1.0 --save
 ```
 
 ## Developers! Read it before everything explodes 
@@ -562,27 +561,4 @@ let arrayToMapResult = MapConverter.arrayToMap(array, 'myId');
   myId2: { myKey21: 'MyValue21', myKey22: 'MyValue22', myKey23: 'MyValue23' }
 };
  * *********************/
-```
-### cassandra.converter.uuid
-#### uuidToString
-Converts an UUID to string
-
-```javascript
-const tools = require('itaas-nodejs-tools');
-let UuidConverter = tools.cassandra.converter.uuid;
-
-let uuidAsUuid = Uuid.fromString('47c7630c-a54f-4893-abd0-e5fe5ce9eaac');
-let uuidResult = UuidConverter.uuidToString(uuidAsUuid);
-// Result: '47c7630c-a54f-4893-abd0-e5fe5ce9eaac' as string
-```
-
-#### stringToUuid
-Converts a string to UUID
-
-```javascript
-const tools = require('itaas-nodejs-tools');
-let UuidConverter = tools.cassandra.converter.uuid;
-
-let uuidResult = UuidConverter.stringToUuid('47c7630c-a54f-4893-abd0-e5fe5ce9eaac');
-// Result: '47c7630c-a54f-4893-abd0-e5fe5ce9eaac' as UUID
 ```
