@@ -75,4 +75,69 @@ describe('.number', function () {
       done();
     });
   });
+  describe('.parseFloat', function () {
+    it('parse valid float', function (done) {
+      should.equal(tools.number.parseFloat('-21474836489'), -21474836489);
+      should.equal(tools.number.parseFloat('-65.3325'), -65.3325);
+      should.equal(tools.number.parseFloat('-2.0'), -2.0);
+      should.equal(tools.number.parseFloat('-1'), -1);
+      should.equal(tools.number.parseFloat('0'), 0);
+      should.equal(tools.number.parseFloat('1'), 1);
+      should.equal(tools.number.parseFloat('2'), 2);
+      should.equal(tools.number.parseFloat('-65332.5'), -65332.5);
+      should.equal(tools.number.parseFloat('21474836489'), 21474836489);
+
+      done();
+    });
+    it('throws for invalid float', function (done) {
+      should.throws(() => { tools.number.parseFloat('a'); });
+      should.throws(() => { tools.number.parseFloat('1a'); });
+      should.throws(() => { tools.number.parseFloat('a1'); });
+      should.throws(() => { tools.number.parseFloat('-1a'); });
+      should.throws(() => { tools.number.parseFloat('-a1'); });
+      should.throws(() => { tools.number.parseFloat('1.2a'); });
+      should.throws(() => { tools.number.parseFloat('1,2a'); });
+      should.throws(() => { tools.number.parseFloat('-1.2a'); });
+      should.throws(() => { tools.number.parseFloat('-1,2a'); });
+      should.throws(() => { tools.number.parseFloat('-3.40282e39'); });
+      should.throws(() => { tools.number.parseFloat('-3.40283e38'); });
+      should.throws(() => { tools.number.parseFloat('3.40282e39'); });
+      should.throws(() => { tools.number.parseFloat('3.40283e38'); });
+      done();
+    });
+  });
+  describe('.isFloat', function () {
+    it('return true for valid float', function (done) {
+      should.equal(tools.number.isFloat('-21474836489'), true);
+      should.equal(tools.number.isFloat('-65.3325'), true);
+      should.equal(tools.number.isFloat('-2.0'), true);
+      should.equal(tools.number.isFloat('-1'), true);
+      should.equal(tools.number.isFloat('0'), true);
+      should.equal(tools.number.isFloat('1'), true);
+      should.equal(tools.number.isFloat('2'), true);
+      should.equal(tools.number.isFloat('-65332.5'), true);
+      should.equal(tools.number.isFloat('21474836489'), true);
+      should.equal(tools.number.isFloat('-3.40282e38'), true);
+      should.equal(tools.number.isFloat('3.40282e38'), true);
+      
+      done();
+    });
+    it('return false for invalid float', function (done) {
+      should.equal(tools.number.isFloat('a'), false);
+      should.equal(tools.number.isFloat('1a'), false);
+      should.equal(tools.number.isFloat('a1'), false);
+      should.equal(tools.number.isFloat('-1a'), false);
+      should.equal(tools.number.isFloat('-a1'), false);
+      should.equal(tools.number.isFloat('1.2a'), false);
+      should.equal(tools.number.isFloat('1,2a'), false);
+      should.equal(tools.number.isFloat('-1.2a'), false);
+      should.equal(tools.number.isFloat('-1.2a'), false);
+      should.equal(tools.number.isFloat('-3.40282e39'), false);
+      should.equal(tools.number.isFloat('-3.40283e38'), false);
+      should.equal(tools.number.isFloat('3.40282e39'), false);
+      should.equal(tools.number.isFloat('3.40283e38'), false);
+
+      done();
+    });
+  });
 });
