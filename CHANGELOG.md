@@ -1,5 +1,8 @@
 # Change Log
 
+## v2.1.0
+- [2017-01-16] *minor* [TM-3992](https://jiralabone.atlassian.net/browse/TM-3992) **Support to float**
+
 ## v2.0.0
 - [2016-11-24] *major* [TM-3570](https://jiralabone.atlassian.net/browse/TM-3570) **Remove Cassandra dependency and Cassandra UUID converter**
 
