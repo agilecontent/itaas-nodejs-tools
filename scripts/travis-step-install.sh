@@ -2,7 +2,7 @@
 set -ev
 
 # Run a cassandra container
-docker run --name cassandra -d -p 9042:9042 cassandra:2.2.6
+docker run --name cassandra -d -p 9042:9042 cassandra:3.0.9
 
 #install dependences
 npm install >/dev/null
