@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+
+## v2.1.1
 - [2016-01-24] *patch* [TM-4000](https://jiralabone.atlassian.net/browse/TM-4000) **Update to Node.js 6**
 
 ## v2.1.0
