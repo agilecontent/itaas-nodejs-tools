@@ -1,5 +1,5 @@
 'use strict';
-/* global describe,it */
+/* global describe, it, before, after */
 
 const should = require('should'); // eslint-disable-line no-unused-vars
 const LicenseBuilder = require('../../../lib/cmd/license-builder');
@@ -43,15 +43,15 @@ let defaultOptions = {
 
 describe('LicenseBuilder', function () {
   before(function () {
-    if (fs.existsSync(tempFile)) { fs.unlinkSync(tempFile); };
-    if (fs.existsSync(l1File)) { fs.unlinkSync(l1File); };
+    if (fs.existsSync(tempFile)) { fs.unlinkSync(tempFile); }
+    if (fs.existsSync(l1File)) { fs.unlinkSync(l1File); }
 
     fs.writeFileSync(l1File, l1Content);
   });
 
   after(function () {
-    if (fs.existsSync(tempFile)) { fs.unlinkSync(tempFile); };
-    if (fs.existsSync(l1File)) { fs.unlinkSync(l1File); };
+    if (fs.existsSync(tempFile)) { fs.unlinkSync(tempFile); }
+    if (fs.existsSync(l1File)) { fs.unlinkSync(l1File); }
   });
 
   describe('.build', function () {
@@ -64,7 +64,7 @@ describe('LicenseBuilder', function () {
     });
 
     it('create dependency file when already exists', function () {
-      if (fs.existsSync(tempFile)) { fs.unlinkSync(tempFile); };
+      if (fs.existsSync(tempFile)) { fs.unlinkSync(tempFile); }
       fs.writeFileSync(tempFile, 'my temp file content');
 
       return LicenseBuilder.create3tdPartyLicense(defaultDepsDetails, defaultOptions).then(() => {
@@ -101,7 +101,7 @@ describe('LicenseBuilder', function () {
       return LicenseBuilder.create3tdPartyLicense(defaultDepsDetails, skipDep1Options).then(() => {
         let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
 
-        licenseFile.should.be.eql(`my header`);
+        licenseFile.should.be.eql('my header');
       });
     });
 
@@ -109,7 +109,7 @@ describe('LicenseBuilder', function () {
 
       let dependenceWithoutFields = {
         'dep1': {
-          'licenses': 'l1',
+          'licenses': 'l1'
         }
       };
 
