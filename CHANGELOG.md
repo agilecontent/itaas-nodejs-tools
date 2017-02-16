@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v2.2.0
+- [2016-01-24] *minor* [TM-4078](https://jiralabone.atlassian.net/browse/TM-4078) **Add license builder to nodejs tools**
+
 ## v2.1.1
 - [2016-01-24] *patch* [TM-4000](https://jiralabone.atlassian.net/browse/TM-4000) **Update to Node.js 6**
 
