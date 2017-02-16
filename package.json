@@ -4,6 +4,9 @@
   "private": true,
   "description": "Node.js tools",
   "main": "./lib/index.js",
+  "bin": {
+    "license": "./lib/cmd/license-cmd.js"
+  },
   "scripts": {
     "test": "mocha --recursive -c test",
     "test-debug": "mocha --recursive -c --debug-brk=5858 test",
@@ -27,6 +30,7 @@
   ],
   "dependencies": {
     "bunyan": "1.8.1",
+    "license-checker": "^8.0.3",
     "lodash": "4.13.1",
     "mkdirp": "0.5.1",
     "moment": "2.13.0",
