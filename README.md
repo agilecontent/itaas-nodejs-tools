@@ -24,6 +24,8 @@
    * [cassandra.cql](#cassandracql)
    * [cassandra.createBatchQueryBuilder](#cassandracreatebatchquerybuilder)
    * [cassandra.converter.map](#cassandraconvertermap)
+ * [Commands](#commands)
+   * [license](#license)
 
 ---------------------
 
@@ -562,5 +564,18 @@ let arrayToMapResult = MapConverter.arrayToMap(array, 'myId');
 };
  * *********************/
 ```
+### Commands
+Run in npm context to get access to the commands
 
+#### license
+Generates licenses of third party dependencies
 
+Params:
+
+--header: Add a header in license file
+
+--allow: Comma separated list of allowed license names to be verified
+
+--file: File to write the license list.
+
+--skipPrefix: Skip licenses of dependencies that start with this
