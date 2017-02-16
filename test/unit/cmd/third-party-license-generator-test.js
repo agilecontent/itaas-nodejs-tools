@@ -2,14 +2,14 @@
 /* global describe, it, before, after */
 
 const should = require('should'); // eslint-disable-line no-unused-vars
-const LicenseBuilder = require('../../../lib/cmd/license-builder');
+const ThirdPartyLicenseGenerator = require('../../../lib/cmd/third-party-license-generator');
 const fs = require('fs');
 
 let tempFile = 'temp-license-file.tmp';
 let l1File = './l1.tmp';
 let l1Content = 'My license text1';
 
-let defaultDepsDetails = {
+let defaultDependenciesDetails = {
   'dep1': {
     'licenses': 'l1',
     'repository': 'https://github.com/UUX-Brasil/itaas-nodejs-tools',
@@ -19,7 +19,7 @@ let defaultDepsDetails = {
     'licenseFile': './l1.tmp'
   }
 };
-let defaultDepsFileContent = `my header----------------------------------------------------------------------
+let defaultDependenciesFileContent = `my header----------------------------------------------------------------------
 
 dep1
 
@@ -41,7 +41,7 @@ let defaultOptions = {
 };
 
 
-describe('LicenseBuilder', function () {
+describe('ThirdPartyLicenseGenerator', function () {
   before(function () {
     if (fs.existsSync(tempFile)) { fs.unlinkSync(tempFile); }
     if (fs.existsSync(l1File)) { fs.unlinkSync(l1File); }
@@ -56,10 +56,10 @@ describe('LicenseBuilder', function () {
 
   describe('.build', function () {
     it('create a commom dependency file', function () {
-      return LicenseBuilder.create3tdPartyLicense(defaultDepsDetails, defaultOptions).then(() => {
+      return ThirdPartyLicenseGenerator.createThirdPartyLicense(defaultDependenciesDetails, defaultOptions).then(() => {
         let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
 
-        licenseFile.should.be.eql(defaultDepsFileContent);
+        licenseFile.should.be.eql(defaultDependenciesFileContent);
       });
     });
 
@@ -67,10 +67,10 @@ describe('LicenseBuilder', function () {
       if (fs.existsSync(tempFile)) { fs.unlinkSync(tempFile); }
       fs.writeFileSync(tempFile, 'my temp file content');
 
-      return LicenseBuilder.create3tdPartyLicense(defaultDepsDetails, defaultOptions).then(() => {
+      return ThirdPartyLicenseGenerator.createThirdPartyLicense(defaultDependenciesDetails, defaultOptions).then(() => {
         let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
 
-        licenseFile.should.be.eql(defaultDepsFileContent);
+        licenseFile.should.be.eql(defaultDependenciesFileContent);
       });
     });
 
@@ -82,11 +82,12 @@ describe('LicenseBuilder', function () {
         skipPrefix: 'skip'
       };
 
-      return LicenseBuilder.create3tdPartyLicense(defaultDepsDetails, notAllowL1Options).then(() => {
-        let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
+      return ThirdPartyLicenseGenerator.createThirdPartyLicense(
+        defaultDependenciesDetails, notAllowL1Options).then(() => {
+          let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
 
-        licenseFile.should.be.eql(defaultDepsFileContent);
-      }).should.be.rejected();
+          licenseFile.should.be.eql(defaultDependenciesFileContent);
+        }).should.be.rejected();
     });
 
 
@@ -98,11 +99,12 @@ describe('LicenseBuilder', function () {
         skipPrefix: 'dep1'
       };
 
-      return LicenseBuilder.create3tdPartyLicense(defaultDepsDetails, skipDep1Options).then(() => {
-        let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
+      return ThirdPartyLicenseGenerator.createThirdPartyLicense(
+        defaultDependenciesDetails, skipDep1Options).then(() => {
+          let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
 
-        licenseFile.should.be.eql('my header');
-      });
+          licenseFile.should.be.eql('my header');
+        });
     });
 
     it('ignore not filled dependency fields', function () {
@@ -113,7 +115,7 @@ describe('LicenseBuilder', function () {
         }
       };
 
-      return LicenseBuilder.create3tdPartyLicense(dependenceWithoutFields, defaultOptions).then(() => {
+      return ThirdPartyLicenseGenerator.createThirdPartyLicense(dependenceWithoutFields, defaultOptions).then(() => {
         let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
 
         licenseFile.should.be.eql(`my header----------------------------------------------------------------------
