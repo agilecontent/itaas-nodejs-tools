@@ -1,11 +1,11 @@
 {
-  "header": "THIRD-PARTY SOFTWARE NOTICES AND INFORMATION\n\nNote:  OTTN is not the author of the files below.\n\nThe notices below are provided for informational purposes only and are not the\nlicense terms under which OTTN distributes these files.\n\n",
+  "header": "THIRD-PARTY SOFTWARE NOTICES AND INFORMATION\n\nNote:  OTTN is not the author of the files below.\n\nThe notices below are provided for informational purposes only and are not\nthe license terms under which OTTN distributes these files.\n\n",
   "file": "LICENSE-3RD-PARTY.txt",
   "skipPrefix": "spotlight@",
   "allowedLicenseList":
     [
       "MIT", "MIT*", "Apache-2.0", "Apache-2.0*", "BSD-3-Clause", "BSD-3-Clause*",
       "BSD", "BSD*", "ISC", "ISC*", "AFLv2.1", "Unlicense", "WTFPL", "BSD-2-Clause",
-      "(MIT AND CC-BY-3.0)", "Public Domain"
+      "(MIT AND CC-BY-3.0)", "Public Domain", "Apache License, Version 2.0"
     ]
 }
