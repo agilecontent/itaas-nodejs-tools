@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v2.2.1
+- [2017-04-10] *major* [TM-4192](https://jiralabone.atlassian.net/browse/TM-4192) **Change license builder to only support JSON config files**
+
 ## v2.2.0
 - [2016-01-24] *minor* [TM-4078](https://jiralabone.atlassian.net/browse/TM-4078) **Add license builder to nodejs tools**
 
