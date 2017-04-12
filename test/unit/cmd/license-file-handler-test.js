@@ -36,7 +36,7 @@ describe('LicenseFileHandler', function() {
   describe('.getFile', function() {
     it('get default license file (/.license-config)', function() {
       return LicenseFileHandler
-        .getFile('.license-config')
+        .getConfig()
         .then((content) => {
           content.should.be.eql(default_config);
         });
@@ -53,7 +53,7 @@ describe('LicenseFileHandler', function() {
     it('get and parse default license file (/.license-config)', function() {
       let test = null;
       return LicenseFileHandler
-        .getFile('.license-config')
+        .getConfig()
         .then((content) => {
           return LicenseFileHandler.parseFile(content);
         })
