@@ -80,19 +80,19 @@ describe('LicenseFileHandler', function() {
     it('fails when given an invalid file path', function() {
       return LicenseFileHandler
         .getFile('aaaaaaaa')
-        .should.be.rejected();
+        .should.be.rejectedWith({'errorCode': 'LICENSE_CONFIG_NOT_FOUND'});
     });
 
     it('fails when given an invalid JSON object', function() {
       return LicenseFileHandler
         .parseFile('aaaaaaaa')
-        .should.be.rejected();
+        .should.be.rejectedWith({'errorCode': 'LICENSE_CONFIG_CORRUPTED'});
     });
 
     it('fails when given a valid JSON object without the needed parameters', function() {
       return LicenseFileHandler
         .parseFile('{\"header\":\"asas\"}')
-        .should.be.rejected();
+        .should.be.rejectedWith({'errorCode': 'LICENSE_CONFIG_CORRUPTED'});
     });
   });
 });
