@@ -1,6 +1,6 @@
 {
   "name": "itaas-nodejs-tools",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "private": true,
   "description": "Node.js tools",
   "main": "./lib/index.js",
@@ -13,7 +13,8 @@
     "lint": "eslint .",
     "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --recursive -R dot -c",
     "nodemon": "nodemon --exec \"npm run lint && npm run coverage\"",
-    "unit-test": "mocha --recursive -c test/unit"
+    "unit-test": "mocha --recursive -c test/unit",
+    "license": "node lib/cmd/license-cmd.js"
   },
   "repository": {
     "type": "git",
@@ -49,7 +50,7 @@
     "request": "^2.72.0",
     "should": "^9.0.1"
   },
-  "author": "Itaas",
+  "author": "iTaaS",
   "license": "ISC",
   "homepage": "https://github.com/UUX-Brasil/itaas-nodejs-tools#readme"
 }
