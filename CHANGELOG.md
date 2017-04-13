@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## v2.2.1
+## v3.0.0
 - [2017-04-10] *major* [TM-4192](https://jiralabone.atlassian.net/browse/TM-4192) **Change license builder to only support JSON config files**
 
 ## v2.2.0
