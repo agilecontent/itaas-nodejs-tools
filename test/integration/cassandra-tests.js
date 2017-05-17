@@ -16,12 +16,12 @@ const logger = tools.createLogger({
 
 const serviceLocator = tools.createServiceLocator();
 const callContext = tools.createCallContext(callId, config, logger, serviceLocator);
-const cassandra = require('cassandra-driver');
+const cassandra = tools.cassandra;
 
 describe('.cassandra', function () {
   describe('.cql', function () {
     before(function () {
-      let cassandraClient = new cassandra.Client(
+      let cassandraClient = new cassandra.client(
         {
           contactPoints: [config.cassandraEndpoint]
         });
@@ -55,7 +55,7 @@ describe('.cassandra', function () {
         });
     });
     after(function () {
-      let cassandraClient = new cassandra.Client(
+      let cassandraClient = new cassandra.client(
         {
           contactPoints: [config.cassandraEndpoint]
         });
@@ -73,7 +73,7 @@ describe('.cassandra', function () {
     describe('.executeNonQuery', function () {
       let cassandraClient;
       before(function () {
-        cassandraClient = new cassandra.Client({
+        cassandraClient = new cassandra.client({
           contactPoints: [config.cassandraEndpoint],
           keyspace: 'test'
         });
@@ -94,7 +94,7 @@ describe('.cassandra', function () {
           });
       });
       it('insert values to a row - validate EXISTS clause (using applied)', function () {
-        let cassandraClient = new cassandra.Client({
+        let cassandraClient = new cassandra.client({
           contactPoints: [config.cassandraEndpoint],
           keyspace: 'test'
         });
@@ -115,7 +115,7 @@ describe('.cassandra', function () {
       });
 
       it('fails for invalid queries', function () {
-        let cassandraClient = new cassandra.Client({
+        let cassandraClient = new cassandra.client({
           contactPoints: [config.cassandraEndpoint],
           keyspace: 'test'
         });
@@ -130,7 +130,7 @@ describe('.cassandra', function () {
     describe('.executeQuery', function () {
       let cassandraClient;
       before(function () {
-        cassandraClient = new cassandra.Client({
+        cassandraClient = new cassandra.client({
           contactPoints: [config.cassandraEndpoint],
           keyspace: 'test'
         });
@@ -158,7 +158,7 @@ describe('.cassandra', function () {
     describe('.executeBatch', function () {
       let cassandraClient;
       before(function () {
-        cassandraClient = new cassandra.Client({
+        cassandraClient = new cassandra.client({
           contactPoints: [config.cassandraEndpoint],
           keyspace: 'test'
         });
@@ -215,7 +215,7 @@ describe('.cassandra', function () {
 
     describe('.canConnect', function () {
       it('returns false when cannot connect', function () {
-        let cassandraClient = new cassandra.Client({
+        let cassandraClient = new cassandra.client({
           contactPoints: ['www.google.com'],
           socketOptions: {
             connectTimeout: 500
@@ -230,7 +230,7 @@ describe('.cassandra', function () {
           });
       });
       it('returns true when can connect', function () {
-        let cassandraClient = new cassandra.Client({
+        let cassandraClient = new cassandra.client({
           contactPoints: [config.cassandraEndpoint]
         });
 

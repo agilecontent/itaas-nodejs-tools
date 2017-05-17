@@ -1,6 +1,7 @@
 # Change Log
 
-## Unreleased
+## v3.1.0
+- [2017-05-17] *minor* [TM-4315](https://jiralabone.atlassian.net/browse/TM-4315) **Tools should accept Consistency level parameter**
 
 ## v3.0.0
 - [2017-04-10] *major* [TM-4192](https://jiralabone.atlassian.net/browse/TM-4192) **Change license builder to only support JSON config files**

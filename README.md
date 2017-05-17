@@ -22,6 +22,8 @@
    * [express.createTrimQueryValueMiddleware](#expresscreatetrimqueryvaluemiddleware)
    * [promise.any](#promiseany)
    * [cassandra.cql](#cassandracql)
+   * [cassandra.client](#cassandraclient)
+   * [cassandra.consistencies](#cassandraconsistencies)
    * [cassandra.createBatchQueryBuilder](#cassandracreatebatchquerybuilder)
    * [cassandra.converter.map](#cassandraconvertermap)
  * [Commands](#commands)
@@ -362,6 +364,57 @@ tools.promise.any([promise1, promise2, promise3])
 
 ## API Tools - Cassandra
 
+### cassandra.client
+
+It's a Cassandra.Client encapsulation from 'cassandra-driver'.
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+const CassandraClient = tools.cassandra.client;
+
+/* See params list below */
+let params = { ... }
+let cassandraClient = new CassandraClient(params);  // return Cassandra.Client
+let cql = 'SELECT * FROM testtable where testid = :id;';
+let parameters = { id: '5' };
+let queryRunner = tools.cassandra.cql;
+queryRunner.executeQuery(callContext, cassandraClient, cql, parameters);
+
+```
+
+[ClientOptions reference](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions)
+
+| Params                 | Definition                                                                       |
+| -----------------------| -------------------------------------------------------------------------------- |
+| cassandraUser          | User to connect in Cassandra.                                                    |
+| cassandraPassword      | Password to connect in Cassandra.                                                |
+| contactPoints          | Array of addresses or host names of the nodes to add as contact points.          |
+| consistency            | See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). Default: localOne.                                            |
+| socketOptions          | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
+| policies               | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
+| pooling                | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
+
+
+### cassandra.consistencies
+
+It's a enum of consistency levels in Cassandra. See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies).
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+const CassandraClient = tools.cassandra.client;
+const CassandraConsistencies = tools.cassandra.consistencies;
+
+let params = { queryOptions : { consistency : CassandraConsistencies.quorum } };
+let cassandraClient = new CassandraClient(params); 
+let cql = 'SELECT * FROM testtable where testid = :id;';
+let parameters = { id: '5' };
+let queryRunner = tools.cassandra.cql;
+queryRunner.executeQuery(callContext, cassandraClient, cql, parameters);
+
+```
+
+
+
 ### cassandra.cql
 It is a helper class which specify a little more the result from 'execute' function from Cassandra driver  
 
@@ -391,7 +444,8 @@ Execute a query (SELECT) on Cassandra. It returns an array with result
 | cassandraClient | true      | Your Cassandra Client. It must be one for application. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)   |
 | cql             | true      | Desired query to be executed. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                            |
 | parameters      | false     | Key-value pair object containing parameters from query. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |
-| routingNameArray| false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html) |
+| routingNames    | false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html) |
+| consistency     | false     | Consistency Level. Also check [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies) |
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
@@ -424,7 +478,8 @@ It also check result in case of "IF EXISTS / IF NOT EXISTS" clause to return cor
 | cassandraClient | true      | Your Cassandra Client. It must be one for application. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)   |
 | cql             | true      | Desired query to be executed. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                            |
 | parameters      | false     | Key-value pair object containing parameters from query. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |
-| routingNameArray| false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html)|
+| routingNames    | false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html)|
+| consistency     | false     | Consistency Level. Also check [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies) |
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
