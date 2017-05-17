@@ -389,7 +389,7 @@ queryRunner.executeQuery(callContext, cassandraClient, cql, parameters);
 | cassandraUser          | User to connect in Cassandra.                                                    |
 | cassandraPassword      | Password to connect in Cassandra.                                                |
 | contactPoints          | Array of addresses or host names of the nodes to add as contact points.          |
-| consistency            | Consistency level. Default: localOne.                                            |
+| consistency            | See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). Default: localOne.                                            |
 | socketOptions          | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
 | policies               | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
 | pooling                | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
@@ -397,7 +397,7 @@ queryRunner.executeQuery(callContext, cassandraClient, cql, parameters);
 
 ### cassandra.consistencies
 
-It's a enum of consistency levels in Cassandra.
+It's a enum of consistency levels in Cassandra. See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies).
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
@@ -413,21 +413,7 @@ queryRunner.executeQuery(callContext, cassandraClient, cql, parameters);
 
 ```
 
-```javascript
-consistencies = {  
-  any: 0x00, 
-  one: 0x01, 
-  two: 0x02, 
-  three: 0x03, 
-  quorum: 0x04, 
-  all: 0x05,
-  localQuorum: 0x06, 
-  eachQuorum: 0x07, 
-  serial: 0x08, 
-  localSerial: 0x09, 
-  localOne: 0x0a 
-}; 
-```
+
 
 ### cassandra.cql
 It is a helper class which specify a little more the result from 'execute' function from Cassandra driver  
