@@ -388,9 +388,11 @@ queryRunner.executeQuery(callContext, cassandraClient, cql, parameters);
 | -----------------------| -------------------------------------------------------------------------------- |
 | cassandraUser          | User to connect in Cassandra.                                                    |
 | cassandraPassword      | Password to connect in Cassandra.                                                |
-| contactPoints          | Array of addresses or host names of the nodes to add as contact points.          |                                                             | 
-| keyspace               | The logged keyspace for all the connections created within the Client instance.  |
+| contactPoints          | Array of addresses or host names of the nodes to add as contact points.          |
 | consistency            | Consistency level. Default: localOne.                                            |
+| socketOptions          | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
+| policies               | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
+| pooling                | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
 
 
 ### cassandra.consistencies
