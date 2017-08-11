@@ -1,6 +1,6 @@
 # iTaaS Node.js Tools
 [![GitHub release](https://img.shields.io/github/release/agilecontent/itaas-nodejs-tools.svg)](https://github.com/agilecontent/itaas-nodejs-tools/releases)
-[![Travis](https://img.shields.io/travis/agilecontent/itaas-nodejs-tools.svg)](https://travis-ci.org/agilecontent/itaas-nodejs-tools)
+[![Travis](https://img.shields.io/travis/agilecontent/itaas-nodejs-tools/master.svg)](https://travis-ci.org/agilecontent/itaas-nodejs-tools)
 [![David](https://img.shields.io/david/agilecontent/itaas-nodejs-tools.svg)](https://david-dm.org/agilecontent/itaas-nodejs-tools)
 
 A collection of tools and utilities for Node.js, maintained by the iTaaS team and used by various iTaaS projects.
@@ -62,14 +62,7 @@ Read the full docs [here](DOCUMENTATION.md).
 
 Developing on Linux is recommended, so you can run integration tests easily with Docker.
 
-Before working on a feature or bugfix, make sure to create a branch from the `dev` branch.
 
-```
-git checkout dev
-git checkout -b my_branch
-```
-
-Happy coding!
 
 
 ### 5.1. Testing
@@ -84,8 +77,13 @@ To run all tests, including integration tests, use this command:
 npm test
 ```
 
-Note that integration tests require a running Cassandra instance.
+Note that integration tests require a running Cassandra (version 3) instance.
 The test Cassandra host can be configured in the environment variable `TEST_CASSANDRA_ENDPOINT`. It defaults to `127.0.0.1`.
+
+> **Tip:** Starting a Cassandra instance with Docker is really simple:
+> ```
+> $ docker run --name cassandra -d -p 9042:9042 cassandra:3.0.9
+> ```
 
 
 ### 5.1. Debugging
@@ -103,10 +101,7 @@ You can then use Visual Studio Code or another editor to debug.
 
 Everyone is free to open pull requests in this repository.
 
-**Rules**
-1. Do not add non-generic features. This library must contain only reusable code.
-2. Add tests for your changes and keep code coverage at 100%.
-3. Always update the [docs](DOCUMENTATION.md) and the [CHANGELOG](CHANGELOG.md).
+For more information on how to contribute properly, check these [instructions](CONTRIBUTING.md).
 
 
 ## 9. Related Projects
