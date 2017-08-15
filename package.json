@@ -46,9 +46,11 @@
     "intercept-stdout": "^0.1.2",
     "istanbul": "^0.4.3",
     "mocha": "^2.5.3",
+    "nock": "^9.0.14",
     "nodemon": "^1.9.2",
     "request": "^2.72.0",
-    "should": "^9.0.1"
+    "should": "^9.0.1",
+    "sleep": "^5.1.1"
   },
   "author": "iTaaS",
   "license": "ISC",
