@@ -84,31 +84,31 @@ Constructing an application in a layer-based structure lets you easily replace l
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
-class RealComplexService {
-  doSomething() {
+class UserService {
+  getUser(id) {
     // complicated requests and database queries
-    return true;
+    return user;
   }
 }
 
-class MockComplexService{
-  doSomething(){
-    // nothing, just a fake return
-    return true;
+class MockUserService{
+  getUser(id){
+    let user = fakeUsersInMemory[id];
+    return user;
   }
 }
 
 let serviceLocator = tools.createServiceLocator();
 
 // for application setup
-serviceLocator.addService('complex-service', new RealComplexService());
+serviceLocator.addService('user-service', new UserService());
 
 // for unit test setup
-serviceLocator.addService('complex-service', new MockComplexService());
+serviceLocator.addService('user-service', new MockUserService());
 
 // for either of the above, the code that uses the service is the same
-let complexService = serviceLocator.getService('complex-service');
-complexService.doSomething();
+let userService = serviceLocator.getService('user-service');
+userService.getUser(id);
 ```
 
 #### `createCallContext`
@@ -119,11 +119,10 @@ Call context is one of the most important concepts of iTaaS components. It conce
 | Parameter      | Type | Required | Description | Default value |
 | -------------- | ---- | --------- | ---------- | ------------- |
 | `callId`         | string | Yes      | A unique ID for the request/execution. It is useful to identify the request/execution in logs. | - |
-| `config`         | object | Yes      | An object containing all settings your application needs. |
-| `logger`         | object | Yes      | A logger for the request/execution. See [createLogger](#createlogger). |
-| `serviceLocator` | object | Yes      | A service locator for the request/execution. See [createServiceLocator](#createservicelocator). |
+| `config`         | object | Yes      | An object containing all settings your application needs. | - |
+| `logger`         | object | Yes      | A logger for the request/execution. See [createLogger](#createlogger). | - |
+| `serviceLocator` | object | Yes      | A service locator for the request/execution. See [createServiceLocator](#createservicelocator). | - |
 
-*Creating a call context*
 ```javascript
 const tools = require('itaas-nodejs-tools');
 const uuid = require('uuid').v4;
@@ -138,7 +137,7 @@ let context = tools.createCallContext(callId, config, logger, serviceLocator);
 
 *Using a call context*
 ```javascript
-function anyFunction(context /* more parameters here */) {
+function anyFunction(context /* , otherParameters, ... */) {
 
   console.log(context.callId); // some UUID
 
@@ -148,7 +147,7 @@ function anyFunction(context /* more parameters here */) {
 
   context.serviceLocator.getService('service-accessible-anywhere');
 
-  otherFunction(context /* other parameters here */);
+  otherFunction(context /* , otherParameters, ... */);
 
 }
 ```
@@ -303,7 +302,7 @@ console.log(tools.number.isInt32(1.2));         // false
 
 #### `number.parseInt32`
 
-Returns the integer value of the parameter if it's accepted by `isInt32`, throws an `Error` otherwise.
+Returns the integer value of the parameter if it's acceptable by `isInt32`, throws an `Error` otherwise.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
@@ -328,7 +327,7 @@ console.log(tools.number.isFloat('eleven'));  // false
 
 #### `number.parseFloat`
 
-Returns the float value of the parameter if it's accepted by `isFloat`, throws an `Error` otherwise.
+Returns the float value of the parameter if it's acceptable by `isFloat`, throws an `Error` otherwise.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
@@ -386,7 +385,7 @@ console.log(tools.date.isDate('2016-24-06'));           // false
 
 #### `date.parseDate`
 
-Returns a Javascript `Date` object equivalent to the parameter if it's accepted by `isDate`, throws an `Error` otherwise.
+Returns a Javascript `Date` object equivalent to the parameter if it's acceptable by `isDate`, throws an `Error` otherwise.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
@@ -402,44 +401,78 @@ tools.date.parseDate(null);         // Error!
 
 ## `express`
 
-### `express.createCallContextMiddleware`
-This Middleware creates a default CallContext from the current call. 
-It by default checks if there is a call id on header, if not creates a new one. 
-It also creates a child log.
+This section contains middlewares for APIs built on top of [Express](https://github.com/expressjs/express), one of the most popular web frameworks for Node.js.
 
-| Property       | Mandatory | Definition                                                                                                           |
-| -------------- | --------- | -------------------------------------------------------------------------------------------------------------------- |
-| config         | true      | Your configuration object                                                                                                   |
-| logger         | true      | Bunyan logger. Also check [createLogger](#createlogger)                                                              |
-| serviceLocator | true      | Dependency Injection class. Also check [createServiceLocator](#createservicelocator)                                 |
-| setContext     | true      | Method to set new Call Context. Express recomends usage of [res.locals](http://expressjs.com/en/api.html#res.locals) |
+### `express.createCallContextMiddleware`
+
+Returns an Express middleware that creates a [call context](#createcallcontext) for each request received.
+
+In order to make the context available to other middlewares and to all routes, this should be the first middleware in the middleware stack and it should be applied globally, not just to a path.
+
+This function accepts these parameters:
+
+| Parameter | Type | Required | Description | Default value |
+|-----------|------|----------|-------------|---------------|
+| config | object | Yes | An object containing the application configuration | - |
+| logger | logger | Yes | A logger created by [createLogger](#createlogger) for the application. | - |
+| serviceLocator | service locator | Yes | A service locator created by [createServiceLocator](#createservicelocator) | - |
+| setContext | function | Yes | Function that will store the context somewhere of your choice. It must have 3 parameters: the first is the `req` from Express, the second is `res`, and the third is the context. We recommend placing the context inside the `res.locals` object. | - |
+
+The context call ID is automatically extracted from the HTTP header `uux-call-context-id` if it exists. If it doesn't, a random UUID is generated for it.
+
+The logger inside each context created by this middleware is a child of the logger specified in the parameters. Each child logs the respective call ID automatically to make it easier to track log messages from each request.
 
 ```javascript
+const express = require('express');
 const tools = require('itaas-nodejs-tools');
-tools.express.createCallContextMiddleware(
-        app.locals.config,
-        app.locals.logger,
-        app.locals.serviceLocator,
-        (req, res, context) => { res.locals.context = context; }));
+
+let app = express();
+
+let logger = tools.createLogger(/* ... */);
+let serviceLocator = tools.createServiceLocator();
+
+let contextMiddleware = tools.express.createCallContextMiddleware(
+  config,
+  logger,
+  serviceLocator,
+  (req, res, context) => { res.locals.context = context; }));
+
+app.use(contextMiddleware);
+
+// all other middlewares and routes
 ```
 
 ### `express.createMorganMiddleware`
-[Morgan](https://github.com/expressjs/morgan) is a HTTP request logger middleware. 
-But as we use a custom logger ([Bunyan](https://github.com/trentm/node-bunyan)), we have wrapped the Morgan and we use it only for get HTTP request. 
-Using express.createMorganMiddleware it records HTTP request and logs in Bunyan info       
 
-| Property       | Mandatory | Definition                                                                                                                |
-| -------------- | --------- | ------------------------------------------------------------------------------------------------------------------------- |
-| getLogger      | true      | Function to get correct logger                                                                                            |
-| format         | true      | Desired Morgan format. Check available formats on [Morgan Github](https://github.com/expressjs/morgan#predefined-formats) |
+Returns an Express middleware that logs formatted HTTP request information at `info` level. It uses [Morgan](https://github.com/expressjs/morgan) to generate the formatted log message, but still uses the [Bunyan](https://github.com/trentm/node-bunyan) logger for the actual logging.
+
+This function accepts these parameters:
+
+| Parameter | Type | Required | Description | Default value |
+|-----------|------|----------|-------------|---------------|
+| getLogger | function | Yes | Function that returns the logger to be used. It can have 2 parameters: the first is the `req` from Express, the second is `res`. If the [call context middleware] is also being used, this function should return the logger within the context. | - |
+| format | string | No | The format to use for the HTTP requests log messages. It must be one of the [predefined formats from Morgan](https://github.com/expressjs/morgan#predefined-formats) | `combined` |
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
-app.use(tools.express.createMorganMiddleware(
-        (req, res) => res.locals.context.logger, 'common'));
+
+let morganMiddleware = tools.express.createMorganMiddleware(
+  (req, res) => res.locals.context.logger, 'common');
+
+app.use(morganMiddleware);
 ```
 
+Example of requests logged (`common` format):
+```
+127.0.0.1 xyz - [01/Feb/1998:01:08:39 -0800] "GET /bannerad/ad.htm HTTP/1.0" 200 198
+```
+
+
+
 ### `express.createLowercaseQueryMiddleware`
+
+Returns an Express middleware that 
+
 Express is query case-sensitive. In order to avoid it, this middleware changes all query parameters to lowercase. 
 E.g.: www.myapi.com/contents?Query1=x&queryTwo=y. It will be available to controllers the query 'query1' and 'querytwo'. 
 
