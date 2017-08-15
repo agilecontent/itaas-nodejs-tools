@@ -44,7 +44,7 @@ describe('Remote Config', function () {
         .reply(404, 'Not Found');        
     });
 
-    it('should return config object', function (done) {
+    it('should return config object : cached and not cached.', function (done) {
       this.timeout(10000);
       let remoteConfig = new RemoteConfig(configUrl, configRefreshTime);
 
@@ -53,11 +53,11 @@ describe('Remote Config', function () {
         should.deepEqual(result, configObject);
         configObject.result.key5 = 'newvalue';
 
-        let chached = () => { 
+        let cached = () => { 
           return remoteConfig.getConfigObject(context); 
         };  
 
-        let notChached = () => { 
+        let notCached = () => { 
           sleep.sleep((configRefreshTime + 1));
 
           nock(configServerUrl)
@@ -68,7 +68,7 @@ describe('Remote Config', function () {
           return remoteConfig.getConfigObject(context); 
         };  
         
-        return Promise.all([chached(), notChached()]);
+        return Promise.all([cached(), notCached()]);
       })
       .then((results)=>{
         should.equal(configObject.result.key5,'newvalue');
