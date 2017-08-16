@@ -846,3 +846,36 @@ The JSON should contain these properties:
 | `allowedLicenseList` | array of strings | Yes | List of allowed license names. An error occurs if there is any dependency with a license which is not in this list. | - |
 | `file` | string | Yes | Name of the file to be generated with the compilation of dependency licenses | - |
 | `skipPrefix` | string | Yes | The prefix of package names that must not be validated or included in the compilation file. This should be the name of the package using the `license` command. | - |
+
+#### Examples
+
+*Using inline parameters*
+```
+$ license \
+  --header="3RD PARTY LICENSES"
+  --allow=MIT,ISC,GPL,Apache-2.0
+  --file="3RD-PARTY-LICENSES"
+  --skipPrefix=my-project
+```
+
+*Using configuration file with default name*
+
+File: `./.license-config`
+```json
+{
+  "header": "3RD PARTY LICENSES",
+  "allowedLicenseList": [ "MIT", "ISC", "GPL", "Apache-2.0" ],
+  "file": "3RD-PARTY-LICENSES",
+  "skipPrefix": "my-project"
+}
+```
+```
+$ license
+```
+
+*USing configuration file with different name*
+
+File: `./license-config-tools.json`
+```
+$ license --config ./license-config-tools.json
+```

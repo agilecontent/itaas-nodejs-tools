@@ -43,11 +43,16 @@ Replace `VERSION` with the desired version from [releases](https://github.com/ag
 
 ## Usage
 
-```js
-/* Examples */
+```javascript
 const tools = require('itaas-nodejs-tools');
+const uuid = require('uuid').v4;
 
-// TODO: add examples here
+let callId = uuid();
+let config = { key: "value" };
+let logger = tools.createLogger();
+let serviceLocator = tools.createServiceLocator();
+
+let context = tools.createCallContext(callId, config, logger, serviceLocator);
 ```
 
 
