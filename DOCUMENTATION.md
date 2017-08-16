@@ -8,7 +8,6 @@
     * [createCallContext](#createcallcontext)
     * [createServiceLocator](#createservicelocator)
     * [createFieldSelector](#createfieldselector)
-    * [createBaseResponse](#createbaseresponse)
   * [Time services](#time-services)
     * [createFixedTimeService](#createfixedtimeservice)
     * [createCurrentTimeService](#createcurrenttimeservice)
@@ -215,31 +214,33 @@ GET /users/1234?fields=name,job
 }
 ```
 
-#### `createBaseResponse` // TODO: remove this from Tools?
-This class should be used to return all responses. Please does not change/add any attribute from it. This will allow the build from typed languages clients easier
 
-| Property     | Mandatory | Definition                               |
-| ------------ | --------- | ---------------------------------------- |
-| status       | true      | Mnemonic Message.                        |
-| message      | true      | Descritive message.                      |
-| result       | false     | Result from call. It should be an object |
-| error        | false     | Error from call. It should be an object  |
+#### createRemoteConfig
+
+Creates a remote config loader that provides a config object obtained from a JSON in the given URL. It caches the config for a period of time that can be specified, then refreshes it after that time has elapsed since the last refresh.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
-let response = tools.createBaseResponse('MNEMONIC_MESSAGE', 'Descritive message from result', { a: 1, b: 2 });
 
-/* *********************
- * Result
- * *********************
-{
-  'status' : 'MNEMONIC_MESSAGE',
-  'message' : 'Descritive message from result',
-  'result' : { a: 1, b: 2 },
-  'error' : undefined
-} 
- * *********************/
+let configUrl = 'http://config.com/my-config.json';
+let refreshTimeSeconds = 60;
+
+let configLoader = tools.createRemoteConfig(configUrl, refreshTimeSeconds);
+
+configLoader.getConfigObject(context)
+  .then((config) => {
+    console.log('My config: ' + JSON.stringify(config));
+  });
 ```
+
+This function accepts these parameters:
+
+| Parameter | Type | Required | Description | Default value |
+|----------------------|---------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| `url` | string | Yes | The URL where the config is located | - |
+| `refreshTimeSeconds` | integer | No | The amount of seconds before the config cache is considered to be expired and a refresh is needed. If not specified, the config will only be retrieved once and will never be refreshed. | no refresh |
+
+The config loader has a function `getConfigObject` that only receives a [context](#createcallcontext). It returns the config from the cache, but first refreshes the cache if the refresh time has elapsed.
 
 ----
 

@@ -1,6 +1,7 @@
 # Change Log
 
 ## Unreleased
+- [2017-08-16] *major* [TM-4408](https://jiralabone.atlassian.net/browse/TM-4408) **Changed Markdown files to new standard and removed BaseResponse**
 - [2017-08-15] *minor* [TM-4639](https://jiralabone.atlassian.net/browse/TM-4639) **Added remote config loader**
 
 ## v3.1.0
