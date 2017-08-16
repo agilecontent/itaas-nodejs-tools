@@ -413,10 +413,10 @@ This function accepts these parameters:
 
 | Parameter | Type | Required | Description | Default value |
 |-----------|------|----------|-------------|---------------|
-| config | object | Yes | An object containing the application configuration | - |
-| logger | logger | Yes | A logger created by [createLogger](#createlogger) for the application. | - |
-| serviceLocator | service locator | Yes | A service locator created by [createServiceLocator](#createservicelocator) | - |
-| setContext | function | Yes | Function that will store the context somewhere of your choice. It must have 3 parameters: the first is the `req` from Express, the second is `res`, and the third is the context. We recommend placing the context inside the `res.locals` object. | - |
+| `config` | object | Yes | An object containing the application configuration | - |
+| `logger` | logger | Yes | A logger created by [createLogger](#createlogger) for the application. | - |
+| `serviceLocator` | service locator | Yes | A service locator created by [createServiceLocator](#createservicelocator) | - |
+| `setContext` | function | Yes | Function that will store the context somewhere of your choice. It must have 3 parameters: the first is the `req` from Express, the second is `res`, and the third is the context. We recommend placing the context inside the `res.locals` object. | - |
 
 The context call ID is automatically extracted from the HTTP header `uux-call-context-id` if it exists. If it doesn't, a random UUID is generated for it.
 
@@ -450,8 +450,8 @@ This function accepts these parameters:
 
 | Parameter | Type | Required | Description | Default value |
 |-----------|------|----------|-------------|---------------|
-| getLogger | function | Yes | Function that returns the logger to be used. It can have 2 parameters: the first is the `req` from Express, the second is `res`. If the [call context middleware] is also being used, this function should return the logger within the context. | - |
-| format | string | No | The format to use for the HTTP requests log messages. It must be one of the [predefined formats from Morgan](https://github.com/expressjs/morgan#predefined-formats) | `combined` |
+| `getLogger` | function | Yes | Function that returns the logger to be used. It can have 2 parameters: the first is the `req` from Express, the second is `res`. If the [call context middleware] is also being used, this function should return the logger within the context. | - |
+| `format` | string | No | The format to use for the HTTP requests log messages. It must be one of the [predefined formats from Morgan](https://github.com/expressjs/morgan#predefined-formats) | `combined` |
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
@@ -491,8 +491,6 @@ function(req, res, next) {
 }
 ```
 
-
-
 ### `express.createTrimQueryValueMiddleware`
 
 Returns an Express middleware that removes all white space from the start and end of query string parameter values.
@@ -507,6 +505,8 @@ let trimQueryStringValueMiddleware = tools.express.createTrimQueryValueMiddlewar
 app.use(trimQueryStringValueMiddleware);
 ```
 
+----
+
 ## `promise `
 
 Under `promise`, there are some useful extensions to the standard `Promise` API from Node.js.
@@ -515,196 +515,212 @@ Under `promise`, there are some useful extensions to the standard `Promise` API 
 
 Returns a `Promise` that resolves as soon as one of the promises resolves, or rejects if all promises reject.
 
-Promise.then will be executed if any function run successfully. 
-If none catch block will be called.
+The resolution value of `promise.any` is the value returned by the promise that resolved. The rejection value of `promise.any` is an array of the caught errors from each promise.
+
+> **Note:** The errors aren't guaranteed to be in the same order as their respective promises.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
-let promise1 = Promise.resolve(1);
-let promise2 = Promise.resolve(2);
-let promise3 = Promise.resolve(3);
+
+let promise1 = getUrl('http://www.google.com');
+let promise2 = getUrl('http://www.github.com');
+let promise3 = getUrl('http://www.npmjs.com');
 
 tools.promise.any([promise1, promise2, promise3])
-  .then(myFunction);
+  .then((response) => {
+    console.log('One of the URLs responded!');
+  })
+  .catch((errors) => {
+    console.log('No URLs responded!');
+    for (let error of errors) {
+      console.log(error.message);
+    }
+  });
 ```
 
-## API Tools - Cassandra
+----
+
+## `cassandra`
+
+This section contains tools for connecting and executing queries on Cassandra databases. They provide a layer of abstraction over [cassandra-driver](https://github.com/datastax/nodejs-driver), the standard Cassandra driver for Node.js by DataStax.
 
 ### `cassandra.client`
 
-It's a Cassandra.Client encapsulation from 'cassandra-driver'.
+A class that provides a `cassandra-driver` client instance for executing Cassandra queries using [cassandra.cql](#cassandracql).
+
+> **Note:** do NOT create multiple instances of this class targeting the same Cassandra keyspace. Create one instance at the start of the application and reuse it.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 const CassandraClient = tools.cassandra.client;
 
-/* See params list below */
-let params = { ... }
-let cassandraClient = new CassandraClient(params);  // return Cassandra.Client
+let params = { /* ... */ };
+let cassandraClient = new CassandraClient(params);
 let cql = 'SELECT * FROM testtable where testid = :id;';
 let parameters = { id: '5' };
 let queryRunner = tools.cassandra.cql;
 queryRunner.executeQuery(callContext, cassandraClient, cql, parameters);
-
 ```
 
-[ClientOptions reference](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions)
+The constructor accepts an options object with these properties:
 
-| Params                 | Definition                                                                       |
-| -----------------------| -------------------------------------------------------------------------------- |
-| cassandraUser          | User to connect in Cassandra.                                                    |
-| cassandraPassword      | Password to connect in Cassandra.                                                |
-| contactPoints          | Array of addresses or host names of the nodes to add as contact points.          |
-| consistency            | See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). Default: localOne.                                            |
-| socketOptions          | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
-| policies               | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
-| pooling                | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) |
+| Property | Type | Required | Description | Default value |
+|-------------------|--------------------|------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| `cassandraUser` | string | Only if `cassandraPassword` is specified | User for the Cassandra connection authentication | - |
+| `cassandraPassword` | string | Only if `cassandraUser` is specified | Password for the Cassandra connection authentication | - |
+| `contactPoints` | array of strings | Yes | Array of addresses or host names of the Cassandra nodes to use as contact points | - |
+| `consistency` | consistency (enum) | No | See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). The enum is exposed as [cassandra.consistencies](#cassandraconsistencies). | `localOne` |
+| `keyspace` | string | Yes | The name of the keyspace (Cassandra's "database" equivalent) to connect to | - |
+| `socketOptions` | object | No | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) | - |
+| `policies` | object | No | See [policies](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.policies/) |  |
+| `pooling` | object | No | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) | - |
 
 
 ### `cassandra.consistencies`
 
-It's a enum of consistency levels in Cassandra. See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies).
+An enum of Cassandra consistency levels, the same enum found at `require('cassandra-driver').types.consistencies`. See [consistency levels](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). You can use the values of this enum to customize the query execution of [cassandra.cql](#cassandracql).
+
+Selecting an appropriate consistency level query allows the application to choose between faster query execution or higher data integrity and consistency, depending on the Cassandra cluster size and the replication factor of the keyspaces. This [online tool](https://www.ecyrd.com/cassandracalculator/) helps on figuring out what's the best consistency level for different configurations.
+
+
+### `cassandra.cql`
+
+Contains a set of useful functions for command execution on Cassandra. They give additional meaning to the commands and return promises instead of requiring a callback function.
+
+#### `canConnect`
+
+Returns a `Promise` with a boolean value. It will be `true` if the client can reach the Cassandra instance and successfully execute commands on it, `false` otherwise.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 const CassandraClient = tools.cassandra.client;
-const CassandraConsistencies = tools.cassandra.consistencies;
 
-let params = { queryOptions : { consistency : CassandraConsistencies.quorum } };
-let cassandraClient = new CassandraClient(params); 
+let cassandraClient = new CassandraClient({ /* ... */ }); 
+
+tools.cql.canConnect(callContext, cassandraClient)
+  .then((canConnect) => {
+    if (canConnect) {
+      console.log('The client can connect to Cassandra!');
+    }
+    else {
+      console.log('The client cannot connect to Cassandra...');
+    }
+  });
+```
+
+This function accepts these parameters:
+
+| Parameter | Type | Required | Description | Default value |
+|----------|------------------|----------|--------------------------------------------------------------------------------------------------------|---------------|
+| `context` | context | Yes | The call context created via [createCallContext](#createcallcontext) for the current request/execution | - |
+| `client` | Cassandra client | Yes | The instance of [cassandra.client](#cassandraclient) whose connection will be tested | - |               
+
+#### `executeQuery`
+
+Executes a query (`SELECT`) using the specified client and returns a `Promise` whose value is the array of returned records. It rejects if the query failed.
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+
+let cassandraClient = new CassandraClient({ /* ... */ });
+
 let cql = 'SELECT * FROM testtable where testid = :id;';
 let parameters = { id: '5' };
-let queryRunner = tools.cassandra.cql;
-queryRunner.executeQuery(callContext, cassandraClient, cql, parameters);
 
+tools.cassandra.cql.executeQuery(
+  context,
+  cassandraClient,
+  cql,
+  parameters)
+  .then((records) => {
+    console.log(records);
+  });
+
+// [
+//   {
+//     'testid': '5',
+//     'value': 'my-value5'
+//   }
+// ]
 ```
 
+This function accepts these parameters:
 
+| Parameter | Type | Required | Description | Default value |
+|--------------|------------------|----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| `context` | context | Yes | The call context created via [createCallContext](#createcallcontext) for the current request/execution | - |
+| `client` | Cassandra client | Yes | The instance of [cassandra.client](#cassandraclient) to use for the query | - |
+| `cql` | string | Yes | The CQL query to execute | - |
+| `parameters` | object | No | An object containing any number of properties to be replaced in the query. Check how to use them correctly in [Parameterized queries](http://docs.datastax.com/en/developer/nodejs-driver/3.2/features/parameterized-queries/) | {} |
+| `routingNames` | array of stirngs | No | An array of column names that are part of the selected table's partition key, to optimize the routing. See [QueryOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.QueryOptions/) | [] |
+| `consistency` | consistency | No | The consistency level to be used for the query. Pick a consistency level from [cassandra.consistencies](#cassandraconsistencies) | consistency level of the client |
 
-### `cassandra.cql`
-It is a helper class which specify a little more the result from 'execute' function from Cassandra driver  
-
-#### `canConnect() `
-Check if there is a connection between your client and a Cassandra database. It does not check if keyspace was created.
-
-| Property       | Mandatory | Definition                                                                                                                       |
-| -------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| callContext    | true      | Call Context. Also check [callContext](#createCallContext)                                                                       | 
-| cassandraClient| true      | Your Cassandra Client. It must be one for application. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |                 
+#### `executeNonQuery`
+Executes a non-query (`INSERT`, `UPDATE`, `DELETE`, etc.) using the specified client and returns a `Promise` which resolves if the command execution succeeded, and rejects if it failed.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
-let cassandraClient = yourCassandraClient; 
-let queryRunner = tools.cassandra.cql;
-let canConnect = queryRunner.canConnect(callContext, cassandraClient)
-// If could connect, canConnect = true
-```
+let cassandraClient = new CassandraClient({ /* ... */ });
 
-#### `executeQuery()`
-Execute a query (SELECT) on Cassandra. It returns an array with result
-
-| Property        | Mandatory | Definition                                                                                                                        |
-| --------------  | --------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| callContext     | true      | Call Context. Also check [callContext](#createCallContext)                                                                        |
-| cassandraClient | true      | Your Cassandra Client. It must be one for application. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)   |
-| cql             | true      | Desired query to be executed. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                            |
-| parameters      | false     | Key-value pair object containing parameters from query. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |
-| routingNames    | false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html) |
-| consistency     | false     | Consistency Level. Also check [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies) |
-
-```javascript
-const tools = require('itaas-nodejs-tools');
-
-let cassandraClient = yourCassandraClient; 
-let cql = 'SELECT * FROM testtable where testid = :id;';
+let cql = 'DELETE FROM testtable where testid = :id;';
 let parameters = { id: '5' };
-let queryRunner = tools.cassandra.cql;
-queryRunner.executeQuery(callContext, cassandraClient, cql, parameters);
 
-/* *********************
- * Result
- * *********************
-[
-  {
-    'testid': '5',
-    'value': 'my-value5'
-  }
-]
- * *********************/
+tools.cassandra.cql.executeNonQuery(
+  context,
+  cassandraClient,
+  cql,
+  parameters)
+  .then(() => {
+    console.log('Deleted successfully!');
+  });
 ```
 
-#### `executeNonQuery()`
-Execute a NonQuery (E.g.: INSERT, DELETE) on Cassandra. It returns a boolean with the result.
-It also check result in case of "IF EXISTS / IF NOT EXISTS" clause to return correct boolean.
+This function accepts these parameters:
 
-| Property        | Mandatory | Definition                                                                                                                        |
-| --------------  | --------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| callContext     | true      | Call Context. Also check [callContext](#createCallContext)                                                                        |
-| cassandraClient | true      | Your Cassandra Client. It must be one for application. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)   |
-| cql             | true      | Desired query to be executed. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                            |
-| parameters      | false     | Key-value pair object containing parameters from query. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |
-| routingNames    | false     | Array of Routing Names. Also check [Routing Queries](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/routingQueries.html)|
-| consistency     | false     | Consistency Level. Also check [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies) |
+| Parameter | Type | Required | Description | Default value |
+|--------------|------------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------|
+| `context` | context | Yes | The call context created via [createCallContext](#createcallcontext) for the current request/execution | - |
+| `client` | Cassandra client | Yes | The instance of [cassandra.client](#cassandraclient) to use for the command | - |
+| `cql` | string | Yes | The CQL command to execute | - |
+| `parameters` | object | No | An object containing any number of properties to be replaced in the command. Check how to use them correctly in [Parameterized queries](http://docs.datastax.com/en/developer/nodejs-driver/3.2/features/parameterized-queries/) | {} |
+| `routingNames` | array of stirngs | No | An array of column names that are part of the table's partition key, to optimize the routing. See [QueryOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.QueryOptions/) | [] |
+| `consistency` | consistency | No | The consistency level to be used for the command. Pick a consistency level from [cassandra.consistencies](#cassandraconsistencies) | consistency level of the client |
 
-```javascript
-const tools = require('itaas-nodejs-tools');
+#### `executeBatch`
 
-let cassandraClient = yourCassandraClient;
-let cql = 'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value5\');';
-let parameters = { id: '5' };
-let queryRunner = tools.cassandra.cql;
-queryRunner.executeNonQuery(callContext, cassandraClient, cql, parameters)
-if(!result){
-  throw new Error('Insert was not executed successfully');
-}
-/* Insert done*/
-```
+Executes a batch of commands (`INSERT`, `UPDATE`, `DELETE`, etc.) using the specified client and returns a `Promise` which resolves if the batch execution succeeded, and rejects if it failed.
 
-#### `executeBatch()`
-A batch statement on Cassandra combines more than one DML statement (INSERT, UPDATE, DELETE) into a single logical operation. 
-For further information, check [Cassandra Batch Page](https://docs.datastax.com/en/cql/3.3/cql/cql_reference/batch_r.html).
-This method executes batch statement.
-
-| Property        | Mandatory | Definition                                                                                                                             |
-| --------------  | --------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| callContext     | true      | Call Context. Also check [callContext](#createCallContext)                                                                             |
-| cassandraClient | true      | Your Cassandra Client. It must be one for application. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)        |
-| builderQueries  | true      | Key-value pair object containing query and parameters. To make it easier check [Batch Query Buider](cassandra.createBatchQueryBuilder) |
+Cassandra batches are atomic, but do not guarantee batch isolation. Read [this document](https://docs.datastax.com/en/cql/3.3/cql/cql_reference/cqlBatch.html) for more details.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
 let cassandraClient = yourCassandraClient;
 
-let builder = tools.cassandra.createBatchQueryBuilder();
-builder.add(
-  'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value3\');',
-  { id: '3' }
-);
-builder.add(
-  'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value4\');',
-  { id: '4' }
-);
+let batchBuilder = tools.cassandra.createBatchQueryBuilder();
 
-let queryRunner = tools.cassandra.cql;
-queryRunner.executeBatch(callContext, cassandraClient, builder.getQueries())
+// add commands
+
+let batch = batchBuilder.getQueries();
+
+tools.cassandra.cql.executeBatch(callContext, cassandraClient, batch)
+  .then(() => {
+    console.log('Batch executed successfully!');
+  });
 ```
+
+This function accepts these parameters:
+
+| Parameter | Type | Required | Description | Default value |
+|-----------|------------------|----------|---------------------------------------------------------------------------------------------------------------------|---------------|
+| `context` | context | Yes | The call context created via [createCallContext](#createcallcontext) for the current request/execution | - |
+| `client` | Cassandra client | Yes | The instance of [cassandra.client](#cassandraclient) to use for the command | - |
+| `batch` | Cassandra batch | Yes | The batch of commands to execute. Use a [batch query builder](#cassandracreatebatchquerybuilder) to create a Cassandra batch | - |
 
 ### `cassandra.createBatchQueryBuilder`
-To execute batch statement, Cassandra asks for a particular object format. 
-To make it easier, use this method and insert new queries. 
-After all, use getQueries() to generate desired object, sending it to [executeBatch()](#executeBatch)  
 
-#### `add()`
-| Property        | Mandatory | Definition                                                                                                                        |
-| --------------  | --------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| cql             | true      | Desired query to be executed. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)                            |
-| parameters      | false     | Key-value pair object containing parameters from query. Also check [Cassandra Client](https://github.com/datastax/nodejs-driver)  |
-
-#### getQueries
-Generates object to batch statement (is the same as client.batch from 
-[Datastax Cassandra Driver](https://docs.datastax.com/en/developer/nodejs-driver/3.0/nodejs-driver/reference/batchStatements.html))
+Returns a batch builder with methods that allow composing a batch of CQL commands to be executed atomically with [cassandra.cql.executeBatch](#executebatch). Create a new batch builder for every new batch. 
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
@@ -719,84 +735,113 @@ builder.add(
   { id: '4' }
 );
 
-console.log(builder.getQueries());
-
-/* *********************
- * Result
- * *********************
-[
-  {
-    'query' : 'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value3\');',
-    'params' : { id: '3' }
-  },
-  {
-    'query' : 'INSERT INTO testtable (testid, value) VALUES (:id, \'my-value4\');',
-    'params' : { id: '4' }
-  }
-] 
- * *********************/
+let batch = builder.getQueries();
 ```
+
+#### `add`
+
+Adds a new CQL command to the builder. This method accepts these parameters:
+
+| Parameter | Type | Required | Description | Default value |
+|------------|--------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| `cql` | string | Yes | The CQL command to execute | - |
+| `parameters` | object | No | An object containing any number of properties to be replaced in the command. Check how to use them correctly in [Parameterized queries](http://docs.datastax.com/en/developer/nodejs-driver/3.2/features/parameterized-queries/) | {} |
+
+#### `getQueries`
+
+Generates a batch containing the commands added so far to the builder.
+
 
 ### `cassandra.converter.map`
 
-#### `mapToArray()`
-Converts a Map to Array
+#### `mapToArray`
+Transforms an object with keys returned by Cassandra for `Map<TEXT,TYPE>` columns into an array. The map keys are assigned to each object of the array as a property with the specified name.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
-let MapConverter = tools.cassandra.converter.map;
 
 let map = {
-  myId1: { myKey11: 'MyValue11', myKey12: 'MyValue12' },
-  myId2: { myKey21: 'MyValue21', myKey22: 'MyValue22', myKey23: 'MyValue23' }
+  user1: { name: 'John', age: 23 },
+  user2: { name: 'Mary', age: 27 }
 };
-MapConverter.mapToArray(map, 'myId');
 
-/* *********************
- * Result
- * *********************
-[
-  { myId: 'myId1', myKey11: 'MyValue11', myKey12: 'MyValue12' },
-  { myId: 'myId2', myKey21: 'MyValue21', myKey22: 'MyValue22', myKey23: 'MyValue23' }
-];
- * *********************/
+let array = tools.cassandra.converter.map.mapToArray(map, 'userId');
+
+console.log(array);
+// [
+//   { userId: 'user1', name: 'John', age: 23 },
+//   { userId: 'user2', name: 'Mary', age: 27 }
+// ]
 ```
 
-#### `arrayToMap()`
-Converts an Array to Map
+This function accepts these parameters:
+
+| Parameter | Type | Required | Description | Default value |
+|-----------------|--------|----------|----------------------------------------------------------------------------------------------|---------------|
+| `map` | object | Yes | The map object returned by Cassandra | - |
+| `keyPropertyName` | string | Yes | The name of the property which will contain the map key on every item of the resulting array | - |
+
+#### `arrayToMap`
+The opposite of `mapToArray`. Transforms an array of objects into an object with keys compatible with Cassandra `Map<TEXT,TYPE>` columns. The map keys are extracted from the property with the specified name on each object.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
-let MapConverter = tools.cassandra.converter.map;
+
+let map = {
+  user1: { name: 'John', age: 23 },
+  user2: { name: 'Mary', age: 27 }
+};
 
 let array = [
-  { myId: 'myId1', myKey11: 'MyValue11', myKey12: 'MyValue12' },
-  { myId: 'myId2', myKey21: 'MyValue21', myKey22: 'MyValue22', myKey23: 'MyValue23' }
+  { userId: 'user1', name: 'John', age: 23 },
+  { userId: 'user2', name: 'Mary', age: 27 }
 ];
 
-let arrayToMapResult = MapConverter.arrayToMap(array, 'myId');
+let map = tools.cassandra.converter.map.arrayToMap(array, 'userId');
 
-/* *********************
- * Result
- * *********************
-{
-  myId1: { myKey11: 'MyValue11', myKey12: 'MyValue12' },
-  myId2: { myKey21: 'MyValue21', myKey22: 'MyValue22', myKey23: 'MyValue23' }
-};
- * *********************/
+console.log(array);
+// {
+//   user1: { name: 'John', age: 23 },
+//   user2: { name: 'Mary', age: 27 }
+// }
 ```
-### Commands
-Run in npm context to get access to the commands
 
-#### license
-Generates licenses of third party dependencies
+This function accepts these parameters:
 
-Params:
+| Parameter | Type | Required | Description | Default value |
+|-----------------|--------|----------|----------------------------------------------------------------------------------------------|---------------|
+| `array` | array of objects | Yes | The array object to be transformed into a map | - |
+| `keyPropertyName` | string | Yes | The name of the property containing the map key on every item of the array | - |
 
---header: Add a header in license file
 
---allow: Comma separated list of allowed license names to be verified
+----
 
---file: File to write the license list.
+## Commands
 
---skipPrefix: Skip licenses of dependencies that start with this
+iTaaS Node.js Tools also include command line tools for common tasks.
+The commands can only be executed within npm scripts.
+
+### `license`
+
+Validates the licenses of the whole dependency tree of the package and generates a third party license compilation file with all packages and their respective licenses.
+
+This command accepts these parameters:
+
+| Parameter | Type | Required | Description | Default value |
+|--------------|--------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
+| `--config` | string | No | The path of the third party license configuration file | `.license-config` |
+| `--header` | string | Yes (can be specified in the config file) | A header to be added to the beginning of the third party licenses file | - |
+| `--allow` | string | Yes (can be specified in the config file) | Comma separated list of allowed license names. An error occurs if there is any dependency with a license which is not in this list. | - |
+| `--file` | string | Yes (can be specified in the config file) | Name of the file to be generated with the compilation of dependency licenses | - |
+| `--skipPrefix` | string | Yes (can be specified in the config file) | The prefix of package names that must not be validated or included in the compilation file. This should be the name of the package using the `license` command. | - |
+
+The parameters can also be defined in a JSON in a configuration file. By default, a file named `.license-config` is expected in the root directory of the package.
+
+The JSON should contain these properties:
+
+| Parameter | Type | Required | Description | Default value |
+|--------------|--------|-------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
+| `header` | string | Yes | A header to be added to the beginning of the third party licenses file | - |
+| `allowedLicenseList` | array of strings | Yes | List of allowed license names. An error occurs if there is any dependency with a license which is not in this list. | - |
+| `file` | string | Yes | Name of the file to be generated with the compilation of dependency licenses | - |
+| `skipPrefix` | string | Yes | The prefix of package names that must not be validated or included in the compilation file. This should be the name of the package using the `license` command. | - |
