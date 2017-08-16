@@ -462,35 +462,59 @@ let morganMiddleware = tools.express.createMorganMiddleware(
 app.use(morganMiddleware);
 ```
 
-Example of requests logged (`common` format):
+Example of logged HTTP request (`common` format):
 ```
 127.0.0.1 xyz - [01/Feb/1998:01:08:39 -0800] "GET /bannerad/ad.htm HTTP/1.0" 200 198
 ```
 
-
-
 ### `express.createLowercaseQueryMiddleware`
 
-Returns an Express middleware that 
-
-Express is query case-sensitive. In order to avoid it, this middleware changes all query parameters to lowercase. 
-E.g.: www.myapi.com/contents?Query1=x&queryTwo=y. It will be available to controllers the query 'query1' and 'querytwo'. 
+Returns an Express middleware that changes all incoming query string parameter names to lowercase. The query string is case sensitive by standard, but case insensitivy is necessary for some APIs.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
-app.use(tools.express.createLowercaseQueryMiddleware());
+
+let lowercaseQueryMiddleware = tools.express.createLowercaseQueryMiddleware();
+
+app.use(lowercaseQueryMiddleware);
 ```
+
+*Example*
+
+```javascript
+GET www.myapi.com/users?Name=john&ORDER=age
+
+function(req, res, next) {
+  // using lowercase query string names
+  console.log(req.param.name); // "john"
+  console.log(req.param.order); // "age"
+}
+```
+
+
 
 ### `express.createTrimQueryValueMiddleware`
-This middleware remove start and end space characters from queryString values. 
+
+Returns an Express middleware that removes all white space from the start and end of query string parameter values.
+
+The middleware uses Javascript's `String.prototype.trim` on each value of query string parameters.
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
-app.use(tools.express.createTrimQueryValueMiddleware());
+
+let trimQueryStringValueMiddleware = tools.express.createTrimQueryValueMiddleware();
+
+app.use(trimQueryStringValueMiddleware);
 ```
 
-## API Tools - Promise 
-### promise.any
+## `promise `
+
+Under `promise`, there are some useful extensions to the standard `Promise` API from Node.js.
+
+### `promise.any`
+
+Returns a `Promise` that resolves as soon as one of the promises resolves, or rejects if all promises reject.
+
 Promise.then will be executed if any function run successfully. 
 If none catch block will be called.
 
