@@ -1,5 +1,10 @@
 # Change Log
 
+## Unreleased
+
+## v3.2.0
+- [2017-08-15] *minor* [TM-4639](https://jiralabone.atlassian.net/browse/TM-4639) **Added remote config loader**
+
 ## v3.1.0
 - [2017-05-17] *minor* [TM-4315](https://jiralabone.atlassian.net/browse/TM-4315) **Tools should accept Consistency level parameter**
 
