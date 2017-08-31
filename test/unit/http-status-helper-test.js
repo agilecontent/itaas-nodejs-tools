@@ -3,7 +3,7 @@
 
 const should = require('should'); // eslint-disable-line no-unused-vars
 
-const HttpStatusHelper = require('../../../app/crosscutting/http-status-helper');
+const tools = require('../../lib/index');
 
 require('mocha');
 
@@ -31,7 +31,7 @@ describe('HttpStatusHelper', function () {
     for (let test of validTests) {
       it(`returns ${test.expected} for ${test.expected}xx args`, function () {
         for (let input of test.input) {
-          HttpStatusHelper.getClass(input).should.be.equal(test.expected);
+          tools.httpStatus.getClass(input).should.be.equal(test.expected);
         }
       });
     }
@@ -39,7 +39,7 @@ describe('HttpStatusHelper', function () {
     for (let test of invalidTests) {
       it('throw Error for invalid status', function () {
         for (let input of test.input) {
-          HttpStatusHelper.getClass.bind(null, input).should.throw(test.expected);
+          tools.httpStatus.getClass.bind(null, input).should.throw(test.expected);
         }
       });
     }
@@ -51,7 +51,7 @@ describe('HttpStatusHelper', function () {
     not4xxValues = not4xxValues.concat(Array.from(Array(100).keys()).map((d) => { return 100 + d; })); // 100..199
     not4xxValues = not4xxValues.concat(Array.from(Array(100).keys()).map((d) => { return 200 + d; })); // 200..299
     not4xxValues = not4xxValues.concat(Array.from(Array(100).keys()).map((d) => { return 300 + d; })); // 300..399
-    not4xxValues = not4xxValues.concat(Array.from(Array(100).keys()).map((d) => { return 500 + d; })); // 400..499
+    not4xxValues = not4xxValues.concat(Array.from(Array(100).keys()).map((d) => { return 500 + d; })); // 500..599
 
     let testCases = [
       { input: all4xxValues, expected: true },
@@ -63,7 +63,7 @@ describe('HttpStatusHelper', function () {
     for (let test of testCases) {
       it(`returns ${test.expected} for ${test.expected ? '4xx' : 'not 4xx'} args`, function () {
         for (let input of test.input) {
-          HttpStatusHelper.isClientError(input).should.be.equal(test.expected);
+          tools.httpStatus.isClientError(input).should.be.equal(test.expected);
         }
       });
     }
@@ -71,10 +71,74 @@ describe('HttpStatusHelper', function () {
     for (let test of invalidTestCases) {
       it('throw Error for invalid status', function () {
         for (let input of test.input) {
-          HttpStatusHelper.getClass.bind(null, input).should.throw(test.expected);
+          tools.httpStatus.getClass.bind(null, input).should.throw(test.expected);
+        }
+      });
+    }
+  });
+
+  describe('isServerError', function () {
+    let all5xxValues = Array.from(Array(100).keys()).map((d) => { return 500 + d; }); // 500..599
+    let not5xxValues = [];
+    not5xxValues = not5xxValues.concat(Array.from(Array(100).keys()).map((d) => { return 100 + d; })); // 100..199
+    not5xxValues = not5xxValues.concat(Array.from(Array(100).keys()).map((d) => { return 200 + d; })); // 200..299
+    not5xxValues = not5xxValues.concat(Array.from(Array(100).keys()).map((d) => { return 300 + d; })); // 300..399
+    not5xxValues = not5xxValues.concat(Array.from(Array(100).keys()).map((d) => { return 400 + d; })); // 400..499
+
+    let testCases = [
+      { input: all5xxValues, expected: true },
+      { input: not5xxValues, expected: false }
+    ];
+
+    let invalidTestCases = [{ input: invalidHttpStatusValues, expected: Error }];
+
+    for (let test of testCases) {
+      it(`returns ${test.expected} for ${test.expected ? '5xx' : 'not 5xx'} args`, function () {
+        for (let input of test.input) {
+          tools.httpStatus.isServerError(input).should.be.equal(test.expected);
         }
       });
     }
 
+    for (let test of invalidTestCases) {
+      it('throw Error for invalid status', function () {
+        for (let input of test.input) {
+          tools.httpStatus.getClass.bind(null, input).should.throw(test.expected);
+        }
+      });
+    }
+  });
+
+  describe('isHttpError', function () {
+    let allErrorValues = [];
+    allErrorValues = allErrorValues.concat(Array.from(Array(100).keys()).map((d) => { return 400 + d; })); // 400..499
+    allErrorValues = allErrorValues.concat(Array.from(Array(100).keys()).map((d) => { return 500 + d; })); // 500..599
+    let notErrorValues = [];
+    notErrorValues = notErrorValues.concat(Array.from(Array(100).keys()).map((d) => { return 100 + d; })); // 100..199
+    notErrorValues = notErrorValues.concat(Array.from(Array(100).keys()).map((d) => { return 200 + d; })); // 200..299
+    notErrorValues = notErrorValues.concat(Array.from(Array(100).keys()).map((d) => { return 300 + d; })); // 300..399
+
+    let testCases = [
+      { input: allErrorValues, expected: true },
+      { input: notErrorValues, expected: false }
+    ];
+
+    let invalidTestCases = [{ input: invalidHttpStatusValues, expected: Error }];
+
+    for (let test of testCases) {
+      it(`returns ${test.expected} for ${test.expected ? 'error' : 'not error'} args`, function () {
+        for (let input of test.input) {
+          tools.httpStatus.isHttpError(input).should.be.equal(test.expected);
+        }
+      });
+    }
+
+    for (let test of invalidTestCases) {
+      it('throw Error for invalid status', function () {
+        for (let input of test.input) {
+          tools.httpStatus.getClass.bind(null, input).should.throw(test.expected);
+        }
+      });
+    }
   });
 });
