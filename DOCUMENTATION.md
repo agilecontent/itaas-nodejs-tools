@@ -21,6 +21,11 @@
   * [Date](#date)
     * [date.isDate](#dateisdate)
     * [date.parseDate](#dateparsedate)
+  * [HttpStatus] (#httpstatus)
+    * [httpStatus.getClass] (#httpstatusgetclass)
+    * [httpStatus.isClientError] (#httpstatusisclienterror)
+    * [httpStatus.isServerError] (#httpstatusisservererror)
+    * [httpStatus.isHttpError] (#httpstatusishttperror)
   * [Express](#express)
     * [express.createCallContextMiddleware](#expresscreatecallcontextmiddleware)
     * [express.createMorganMiddleware](#expresscreatemorganmiddleware)
@@ -399,6 +404,126 @@ tools.date.parseDate(null);         // Error!
 ```
 
 ----
+### `httpStatus`
+
+Under `httpStatus`, there are some functions that validates Http Statuses.
+
+#### `httpStatus.isHttpStatus`
+
+Returns `true` if the passed `status` a valid http status (between 100 and 599). Returns `false` otherwise.
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+
+console.log(tools.httpStatus.getClass('100')); // true
+console.log(tools.httpStatus.getClass('200')); // true
+console.log(tools.httpStatus.getClass('404')); // true
+console.log(tools.httpStatus.getClass('451')); // true
+console.log(tools.httpStatus.getClass('599')); // true
+
+console.log(tools.httpStatus.getClass(200));   // true
+console.log(tools.httpStatus.getClass(404));   // true
+
+console.log(tools.httpStatus.getClass(0));     // false
+console.log(tools.httpStatus.getClass('1'));   // false 
+console.log(tools.httpStatus.getClass('a'));   // false 
+console.log(tools.httpStatus.getClass('600')); // false 
+```
+
+#### `httpStatus.getClass`
+
+Returns http status type of the passed `status` if it is a valid integer and is a valid http status (between 100 and 599). Throws an `Error` otherwise.
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+
+console.log(tools.httpStatus.getClass('100')); // 1 
+console.log(tools.httpStatus.getClass('200')); // 2
+console.log(tools.httpStatus.getClass('404')); // 4
+console.log(tools.httpStatus.getClass('451')); // 4
+console.log(tools.httpStatus.getClass('599')); // 5
+
+console.log(tools.httpStatus.getClass(200));   // 2
+console.log(tools.httpStatus.getClass(404));   // 4
+
+console.log(tools.httpStatus.getClass(0));     // Error! 
+console.log(tools.httpStatus.getClass('1'));   // Error! 
+console.log(tools.httpStatus.getClass('a'));   // Error! 
+console.log(tools.httpStatus.getClass('600')); // Error! 
+```
+
+#### `httpStatus.isClientError`
+
+If is a valid http status, returns `true` if the http status is 4xx, and `false` otherwise. If is not a valid http status, throws an `Error` (see [httpStatus.getClass](#httpstatusgetclass))
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+
+console.log(tools.httpStatus.isClientError('100')); // false
+console.log(tools.httpStatus.isClientError('200')); // false
+
+console.log(tools.httpStatus.isClientError('404')); // true
+console.log(tools.httpStatus.isClientError('451')); // true
+
+console.log(tools.httpStatus.isClientError('599')); // false
+
+console.log(tools.httpStatus.isClientError(200));   // false
+console.log(tools.httpStatus.isClientError(404));   // true
+
+console.log(tools.httpStatus.isClientError(0));     // Error! 
+console.log(tools.httpStatus.isClientError('1'));   // Error! 
+console.log(tools.httpStatus.isClientError('a'));   // Error! 
+console.log(tools.httpStatus.isClientError('600')); // Error! 
+```
+
+#### `httpStatus.isServerError`
+
+If is a valid http status, returns `true` if the http status is 5xx, and `false` otherwise. If is not a valid http status, throws an `Error` (see [httpStatus.getClass](#httpstatusgetclass))
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+
+console.log(tools.httpStatus.isServerError('100')); // false
+console.log(tools.httpStatus.isServerError('200')); // false
+
+console.log(tools.httpStatus.isServerError('404')); // false
+
+console.log(tools.httpStatus.isServerError('500')); // true
+console.log(tools.httpStatus.isServerError('599')); // true
+
+console.log(tools.httpStatus.isServerError(200));   // false
+console.log(tools.httpStatus.isServerError(503));   // true
+
+console.log(tools.httpStatus.isServerError(0));     // Error! 
+console.log(tools.httpStatus.isServerError('1'));   // Error! 
+console.log(tools.httpStatus.isServerError('a'));   // Error! 
+console.log(tools.httpStatus.isServerError('600')); // Error! 
+```
+
+#### `httpStatus.isHttpError`
+
+If is a valid http status, returns `true` if the http status is 4xx or 5xx, and `false` otherwise. If is not a valid http status, throws an `Error` (see [httpStatus.getClass](#httpstatusgetclass))
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+
+console.log(tools.httpStatus.isHttpError('100')); // false
+console.log(tools.httpStatus.isHttpError('200')); // false
+
+console.log(tools.httpStatus.isHttpError('400')); // true
+console.log(tools.httpStatus.isHttpError('404')); // true
+console.log(tools.httpStatus.isHttpError('500')); // true
+console.log(tools.httpStatus.isHttpError('599')); // true
+
+console.log(tools.httpStatus.isHttpError(200));   // false
+console.log(tools.httpStatus.isHttpError(404));   // true
+console.log(tools.httpStatus.isHttpError(503));   // true
+
+console.log(tools.httpStatus.isHttpError(0));     // Error! 
+console.log(tools.httpStatus.isHttpError('1'));   // Error! 
+console.log(tools.httpStatus.isHttpError('a'));   // Error! 
+console.log(tools.httpStatus.isHttpError('600')); // Error! 
+```
 
 ## `express`
 

@@ -141,4 +141,30 @@ describe('HttpStatusHelper', function () {
       });
     }
   });
+  
+  describe('isHttpStatus', function () {
+    let validHttpStatus = [
+      100, 101, 149, 150, 151, 199,
+      200, 201, 249, 250, 251, 299,
+      300, 301, 349, 350, 351, 399,
+      400, 401, 449, 450, 451, 499,
+      500, 501, 549, 550, 551, 599
+    ];
+
+    let notHttpStatus = [invalidHttpStatusValues];
+
+    let testCases = [
+      { input: validHttpStatus, expected: true },
+      { input: notHttpStatus, expected: false }
+    ];
+
+    for (let test of testCases) {
+      it(`returns ${test.expected} for ${test.expected ? 'valid httpStatus' : 'not valid httpStatus'} args`, 
+      function () {
+        for (let input of test.input) {
+          tools.httpStatus.isHttpStatus(input).should.be.equal(test.expected);
+        }
+      });
+    }
+  });
 });
