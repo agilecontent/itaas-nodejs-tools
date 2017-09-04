@@ -1,5 +1,10 @@
 # Change Log
 
+## Unreleased
+
+## v4.1.0
+- [2017-08-31] *minor* [TM-4719](https://jiralabone.atlassian.net/browse/TM-4719) **Move http-status-helper from Spotlight to itaas-nodejs-tools**
+
 ## v4.0.0
 - [2017-08-16] *major* [TM-4408](https://jiralabone.atlassian.net/browse/TM-4408) **Changed Markdown files to new standard and removed BaseResponse**
 
