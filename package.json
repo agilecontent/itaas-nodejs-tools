@@ -1,6 +1,6 @@
 {
   "name": "itaas-nodejs-tools",
-  "version": "4.1.0",
+  "version": "4.1.1",
   "private": true,
   "description": "Node.js tools",
   "main": "./lib/index.js",
@@ -18,10 +18,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/UUX-Brasil/itaas-nodejs-tools.git"
+    "url": "git+https://github.com/agilecontent/itaas-nodejs-tools.git"
   },
   "bugs": {
-    "url": "https://github.com/UUX-Brasil/itaas-nodejs-tools/issues"
+    "url": "https://github.com/agilecontent/itaas-nodejs-tools/issues"
   },
   "keywords": [
     "node",
@@ -54,5 +54,5 @@
   },
   "author": "iTaaS",
   "license": "ISC",
-  "homepage": "https://github.com/UUX-Brasil/itaas-nodejs-tools#readme"
+  "homepage": "https://github.com/agilecontent/itaas-nodejs-tools#readme"
 }
