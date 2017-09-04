@@ -1,6 +1,6 @@
 # Change Log
 
-## Unreleased
+## v4.0.0
 - [2017-08-16] *major* [TM-4408](https://jiralabone.atlassian.net/browse/TM-4408) **Changed Markdown files to new standard and removed BaseResponse**
 
 ## v3.2.0
