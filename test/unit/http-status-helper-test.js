@@ -22,11 +22,7 @@ describe('HttpStatusHelper', function () {
       { input: [500, 501, 549, 550, 551, 599], expected: 5 }
     ];
 
-    let invalidTests = [
-      {
-        input: invalidHttpStatusValues, expected: Error
-      }
-    ];
+    let invalidTests = [{ input: invalidHttpStatusValues, expected: Error }];
 
     for (let test of validTests) {
       it(`returns ${test.expected} for ${test.expected}xx args`, function () {
@@ -71,7 +67,7 @@ describe('HttpStatusHelper', function () {
     for (let test of invalidTestCases) {
       it('throw Error for invalid status', function () {
         for (let input of test.input) {
-          tools.httpStatus.getClass.bind(null, input).should.throw(test.expected);
+          tools.httpStatus.isClientError.bind(null, input).should.throw(test.expected);
         }
       });
     }
@@ -103,7 +99,7 @@ describe('HttpStatusHelper', function () {
     for (let test of invalidTestCases) {
       it('throw Error for invalid status', function () {
         for (let input of test.input) {
-          tools.httpStatus.getClass.bind(null, input).should.throw(test.expected);
+          tools.httpStatus.isServerError.bind(null, input).should.throw(test.expected);
         }
       });
     }
@@ -136,7 +132,7 @@ describe('HttpStatusHelper', function () {
     for (let test of invalidTestCases) {
       it('throw Error for invalid status', function () {
         for (let input of test.input) {
-          tools.httpStatus.getClass.bind(null, input).should.throw(test.expected);
+          tools.httpStatus.isHttpError.bind(null, input).should.throw(test.expected);
         }
       });
     }
