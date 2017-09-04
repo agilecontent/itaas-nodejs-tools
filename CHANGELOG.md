@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-## v4.1.1
-- [2017-09-04] *patch* [TM-4733](https://jiralabone.atlassian.net/browse/TM-4733) **Add request to dependencies.**
-- [2017-09-04] *patch* [TM-4492](https://jiralabone.atlassian.net/browse/TM-4492) **Remove Cassandra from dependencies.**
+## v5.0.0
+- [2017-09-04] *Major* [TM-4492](https://jiralabone.atlassian.net/browse/TM-4492) **Remove Cassandra from dependencies**
+- [2017-09-04] *patch* [TM-4733](https://jiralabone.atlassian.net/browse/TM-4733) **Add request to dependencies**
 
 ## v4.1.0
 - [2017-08-31] *minor* [TM-4719](https://jiralabone.atlassian.net/browse/TM-4719) **Move http-status-helper from Spotlight to itaas-nodejs-tools**
