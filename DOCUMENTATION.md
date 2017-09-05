@@ -696,7 +696,7 @@ The constructor accepts an options object with these properties:
 | `cassandraUser` | string | Only if `cassandraPassword` is specified | User for the Cassandra connection authentication | - |
 | `cassandraPassword` | string | Only if `cassandraUser` is specified | Password for the Cassandra connection authentication | - |
 | `contactPoints` | array of strings | Yes | Array of addresses or host names of the Cassandra nodes to use as contact points | - |
-| `consistency` | consistency (enum) | No | See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). The enum is exposed as [cassandra.getConsistencies](#cassandragetconsistencies). | `localOne` |
+| `consistency` | consistency (enum) | No | See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). The enum is exposed in the function [cassandra.getConsistencies](#cassandragetconsistencies). | `localOne` |
 | `keyspace` | string | Yes | The name of the keyspace (Cassandra's "database" equivalent) to connect to | - |
 | `socketOptions` | object | No | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) | - |
 | `policies` | object | No | See [policies](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.policies/) |  |
@@ -705,7 +705,7 @@ The constructor accepts an options object with these properties:
 
 ### `cassandra.getConsistencies`
 
-An enum of Cassandra consistency levels, the same enum found at `require('cassandra-driver').types.consistencies`. See [consistency levels](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). You can use the values of this enum to customize the query execution of [cassandra.cql](#cassandracql).
+A function that returns the enum of Cassandra consistency levels, the same enum found at `require('cassandra-driver').types.consistencies`. See [consistency levels](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). You can use the values of this enum to customize the query execution of [cassandra.cql](#cassandracql).
 
 Selecting an appropriate consistency level query allows the application to choose between faster query execution or higher data integrity and consistency, depending on the Cassandra cluster size and the replication factor of the keyspaces. This [online tool](https://www.ecyrd.com/cassandracalculator/) helps on figuring out what's the best consistency level for different configurations.
 
