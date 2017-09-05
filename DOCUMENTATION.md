@@ -37,7 +37,7 @@
   * [Cassandra](#cassandra)
     * [cassandra.cql](#cassandracql)
     * [cassandra.client](#cassandraclient)
-    * [cassandra.consistencies](#cassandraconsistencies)
+    * [cassandra.getConsistencies](#cassandragetconsistencies)
     * [cassandra.createBatchQueryBuilder](#cassandracreatebatchquerybuilder)
     * [cassandra.converter.map](#cassandraconvertermap)
 * [Commands](#commands)
@@ -696,16 +696,16 @@ The constructor accepts an options object with these properties:
 | `cassandraUser` | string | Only if `cassandraPassword` is specified | User for the Cassandra connection authentication | - |
 | `cassandraPassword` | string | Only if `cassandraUser` is specified | Password for the Cassandra connection authentication | - |
 | `contactPoints` | array of strings | Yes | Array of addresses or host names of the Cassandra nodes to use as contact points | - |
-| `consistency` | consistency (enum) | No | See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). The enum is exposed as [cassandra.consistencies](#cassandraconsistencies). | `localOne` |
+| `consistency` | consistency (enum) | No | See [Consistency Level](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). The enum is exposed in the function [cassandra.getConsistencies](#cassandragetconsistencies). | `localOne` |
 | `keyspace` | string | Yes | The name of the keyspace (Cassandra's "database" equivalent) to connect to | - |
 | `socketOptions` | object | No | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) | - |
 | `policies` | object | No | See [policies](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.policies/) |  |
 | `pooling` | object | No | See [ClientOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.ClientOptions/) | - |
 
 
-### `cassandra.consistencies`
+### `cassandra.getConsistencies`
 
-An enum of Cassandra consistency levels, the same enum found at `require('cassandra-driver').types.consistencies`. See [consistency levels](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). You can use the values of this enum to customize the query execution of [cassandra.cql](#cassandracql).
+A function that returns the enum of Cassandra consistency levels, the same enum found at `require('cassandra-driver').types.consistencies`. See [consistency levels](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/module.types/#member.consistencies). You can use the values of this enum to customize the query execution of [cassandra.cql](#cassandracql).
 
 Selecting an appropriate consistency level query allows the application to choose between faster query execution or higher data integrity and consistency, depending on the Cassandra cluster size and the replication factor of the keyspaces. This [online tool](https://www.ecyrd.com/cassandracalculator/) helps on figuring out what's the best consistency level for different configurations.
 
@@ -780,7 +780,7 @@ This function accepts these parameters:
 | `cql` | string | Yes | The CQL query to execute | - |
 | `parameters` | object | No | An object containing any number of properties to be replaced in the query. Check how to use them correctly in [Parameterized queries](http://docs.datastax.com/en/developer/nodejs-driver/3.2/features/parameterized-queries/) | {} |
 | `routingNames` | array of stirngs | No | An array of column names that are part of the selected table's partition key, to optimize the routing. See [QueryOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.QueryOptions/) | [] |
-| `consistency` | consistency | No | The consistency level to be used for the query. Pick a consistency level from [cassandra.consistencies](#cassandraconsistencies) | consistency level of the client |
+| `consistency` | consistency | No | The consistency level to be used for the query. Pick a consistency level from [cassandra.getConsistencies](#cassandragetconsistencies) | consistency level of the client |
 
 #### `executeNonQuery`
 Executes a non-query (`INSERT`, `UPDATE`, `DELETE`, etc.) using the specified client and returns a `Promise` which resolves if the command execution succeeded, and rejects if it failed.
@@ -812,7 +812,7 @@ This function accepts these parameters:
 | `cql` | string | Yes | The CQL command to execute | - |
 | `parameters` | object | No | An object containing any number of properties to be replaced in the command. Check how to use them correctly in [Parameterized queries](http://docs.datastax.com/en/developer/nodejs-driver/3.2/features/parameterized-queries/) | {} |
 | `routingNames` | array of stirngs | No | An array of column names that are part of the table's partition key, to optimize the routing. See [QueryOptions](http://docs.datastax.com/en/developer/nodejs-driver/3.2/api/type.QueryOptions/) | [] |
-| `consistency` | consistency | No | The consistency level to be used for the command. Pick a consistency level from [cassandra.consistencies](#cassandraconsistencies) | consistency level of the client |
+| `consistency` | consistency | No | The consistency level to be used for the command. Pick a consistency level from [cassandra.getConsistencies](#cassandragetconsistencies) | consistency level of the client |
 
 #### `executeBatch`
 
