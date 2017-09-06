@@ -8,6 +8,7 @@
     * [createCallContext](#createcallcontext)
     * [createServiceLocator](#createservicelocator)
     * [createFieldSelector](#createfieldselector)
+    * [createRemoteConfig](#createremoteconfig)
   * [Time services](#time-services)
     * [createFixedTimeService](#createfixedtimeservice)
     * [createCurrentTimeService](#createcurrenttimeservice)
