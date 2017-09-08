@@ -1,6 +1,7 @@
 # Change Log
 
 ## Unreleased
+- [2017-09-08] *minor* [TM-4508](https://jiralabone.atlassian.net/browse/TM-4508) **Cache Remote Object**
 
 ## v5.0.0
 - [2017-09-04] *major* [TM-4492](https://jiralabone.atlassian.net/browse/TM-4492) **Remove Cassandra from dependencies**
