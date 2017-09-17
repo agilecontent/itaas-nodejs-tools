@@ -30,6 +30,12 @@ const remoteObjectValue = {
 };
 
 describe('Cache Remote Object', function () {
+  describe('.create', function () {
+    it('return an CacheRemoteObject object', () => {
+      let remoteObject = CacheRemoteObject.create(objectUrl, objectRefreshTime);
+      remoteObject.should.be.an.instanceOf(CacheRemoteObject);
+    });
+  });
   describe('.nextRefresh', function () {
     it('return correct time for next refresh', () => {
       let remoteObject = new CacheRemoteObject(objectUrl, objectRefreshTime);
@@ -108,6 +114,20 @@ describe('Cache Remote Object', function () {
         .reply(404, 'Not Found');
     });
 
+    it('should get error for empty url', function (done) {
+      let remoteObject = new CacheRemoteObject(null, objectRefreshTime);
+
+      remoteObject.getFresh(context)
+        .then((result) => {
+          done(new Error('Missing Remote Object URL.'));
+        })
+        .catch((err) => {
+          should.equal(err.message, 'Missing Remote Object URL.');
+          done();
+        })
+        .catch(done);
+    });
+
     it('should get error for not found url', function (done) {
       let remoteObject = new CacheRemoteObject(notFoundObjectUrl, objectRefreshTime);
 
@@ -135,6 +155,7 @@ describe('Cache Remote Object', function () {
         })
         .catch(done);
     });
+
     it('should return object : cached and not cached.', function (done) {
       let remoteObject = new CacheRemoteObject(objectUrl, objectRefreshTime);
 
