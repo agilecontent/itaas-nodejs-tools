@@ -8,6 +8,8 @@
     * [createCallContext](#createcallcontext)
     * [createServiceLocator](#createservicelocator)
     * [createFieldSelector](#createfieldselector)
+    * [createRemoteConfig](#createremoteconfig)
+    * [cacheRemoteObject](#cacheremoteobject)
   * [Time services](#time-services)
     * [createFixedTimeService](#createfixedtimeservice)
     * [createCurrentTimeService](#createcurrenttimeservice)
@@ -247,6 +249,34 @@ This function accepts these parameters:
 | `refreshTimeSeconds` | integer | No | The amount of seconds before the config cache is considered to be expired and a refresh is needed. If not specified, the config will only be retrieved once and will never be refreshed. | no refresh |
 
 The config loader has a function `getConfigObject` that only receives a [context](#createcallcontext). It returns the config from the cache, but first refreshes the cache if the refresh time has elapsed.
+
+
+#### cacheRemoteConfig
+
+Creates a remote object loader that provides a object obtained from a JSON in the given URL. It caches the config for a period of time that can be specified, then refreshes it after that time has elapsed since the last refresh the object asynchronous.
+
+```javascript
+const tools = require('itaas-nodejs-tools');
+
+let objectUrl = 'http://config.com/my-config.json';
+let refreshTimeSeconds = 60;
+
+let objectLoader = tools.cacheRemoteObject(objectUrl, refreshTimeSeconds);
+
+objectLoader.getFresh(context)
+  .then((remoteObject) => {
+    console.log('My config: ' + JSON.stringify(remoteObject));
+  });
+```
+
+This function accepts these parameters:
+
+| Parameter | Type | Required | Description | Default value |
+|----------------------|---------|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------|
+| `url` | string | Yes | The URL where the object is located | - |
+| `refreshTimeSeconds` | integer | No | The amount of seconds before the object cache is considered to be expired and a refresh is needed. If not specified, the config will only be retrieved once and will never be refreshed. | no refresh |
+
+The Cache Object Remote has a function `getFresh` that only receives a [context](#createcallcontext). It returns a freshy object, and update the cache status, another function is `getCached`, that will return the cached object and check if a refresh is needed (if needed, runs the `refreshCache` assyncronous).
 
 ----
 

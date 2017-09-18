@@ -38,7 +38,9 @@ describe('LicenseFileHandler', function() {
       return LicenseFileHandler
         .getConfig()
         .then((content) => {
-          content.should.be.eql(default_config);
+          let actual = JSON.stringify((JSON.parse(content)));
+          let expected = JSON.stringify((JSON.parse(default_config)));          
+          actual.should.be.eql(expected);
         });
     });
 
@@ -46,7 +48,9 @@ describe('LicenseFileHandler', function() {
       return LicenseFileHandler
         .getFile('mylicense.json')
         .then((content) => {
-          content.should.be.eql(custom_config);
+          let actual = JSON.stringify((JSON.parse(content)));
+          let expected = JSON.stringify((JSON.parse(custom_config)));          
+          actual.should.be.eql(expected);
         });
     });
 

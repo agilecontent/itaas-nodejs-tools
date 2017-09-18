@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v5.1.0
+- [2017-09-08] *minor* [TM-4508](https://jiralabone.atlassian.net/browse/TM-4508) **Cache Remote Object**
+
 ## v5.0.0
 - [2017-09-04] *major* [TM-4492](https://jiralabone.atlassian.net/browse/TM-4492) **Remove Cassandra from dependencies**
 - [2017-09-04] *patch* [TM-4733](https://jiralabone.atlassian.net/browse/TM-4733) **Add request to dependencies**
