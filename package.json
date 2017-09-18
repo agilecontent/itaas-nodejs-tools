@@ -8,12 +8,12 @@
     "license": "./lib/cmd/license-cmd.js"
   },
   "scripts": {
-    "test": "mocha --recursive -c test",
+    "test": "mocha --recursive -c --timeout 10000 test",
     "test-debug": "mocha --recursive -c --debug-brk=5858 test",
     "lint": "eslint .",
-    "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --recursive -R dot -c",
+    "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --timeout 10000 --recursive -R dot -c",
     "nodemon": "nodemon --exec \"npm run lint && npm run coverage\"",
-    "test-unit": "mocha --recursive -c test/unit",
+    "test-unit": "mocha --timeout 10000 --recursive -c test/unit",
     "license": "node lib/cmd/license-cmd.js"
   },
   "repository": {
