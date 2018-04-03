@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v5.1.1
+- [2018-04-03] *patch* [TM-5231](https://jiralabone.atlassian.net/browse/TM-5231) **Add component name on the log**
+
 ## v5.1.0
 - [2017-09-08] *minor* [TM-4508](https://jiralabone.atlassian.net/browse/TM-4508) **Cache Remote Object**
 

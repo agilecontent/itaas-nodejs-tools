@@ -1,6 +1,6 @@
 {
   "name": "itaas-nodejs-tools",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "private": true,
   "description": "Node.js tools",
   "main": "./lib/index.js",
@@ -14,7 +14,8 @@
     "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --timeout 10000 --recursive -R dot -c",
     "nodemon": "nodemon --exec \"npm run lint && npm run coverage\"",
     "test-unit": "mocha --timeout 10000 --recursive -c test/unit",
-    "license": "node lib/cmd/license-cmd.js"
+    "license": "node lib/cmd/license-cmd.js",
+    "precommit": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,7 @@
     "license-checker": "^8.0.3",
     "lodash": "4.13.1",
     "mkdirp": "0.5.1",
-    "moment": "2.13.0",
+    "moment": "^2.22.0",
     "morgan": "1.7.0",
     "request": "^2.81.0",
     "uuid": "2.0.2"
@@ -50,7 +51,8 @@
     "nock": "^9.0.14",
     "nodemon": "^1.9.2",
     "should": "^9.0.1",
-    "sleep": "^5.1.1"
+    "sleep": "^5.1.1",
+    "husky": "0.14.3"
   },
   "author": "iTaaS",
   "license": "ISC",
