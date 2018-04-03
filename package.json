@@ -14,7 +14,8 @@
     "coverage": "istanbul cover --include-all-sources true node_modules/mocha/bin/_mocha -- --timeout 10000 --recursive -R dot -c",
     "nodemon": "nodemon --exec \"npm run lint && npm run coverage\"",
     "test-unit": "mocha --timeout 10000 --recursive -c test/unit",
-    "license": "node lib/cmd/license-cmd.js"
+    "license": "node lib/cmd/license-cmd.js",
+    "precommit": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -50,7 +51,8 @@
     "nock": "^9.0.14",
     "nodemon": "^1.9.2",
     "should": "^9.0.1",
-    "sleep": "^5.1.1"
+    "sleep": "^5.1.1",
+    "husky": "0.14.3"
   },
   "author": "iTaaS",
   "license": "ISC",
