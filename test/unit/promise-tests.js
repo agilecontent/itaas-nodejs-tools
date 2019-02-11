@@ -2,7 +2,6 @@
 /* global describe, it*/
 
 const assert = require('assert');
-const _ = require('lodash');
 const tools = require('../../lib/index');
 
 describe('.promise', function () {
@@ -15,7 +14,7 @@ describe('.promise', function () {
       tools.promise.any([promise1, promise2, promise3])
         .then((value) => {
 
-          let hasValue = _.includes([1, 2, 3], value);
+          let hasValue = [1, 2, 3].indexOf(value) > -1;
 
           assert(hasValue, 'should resolve with 1, 2 or 3');
 
@@ -31,7 +30,7 @@ describe('.promise', function () {
       tools.promise.any([promise1, promise2, promise3])
         .then((value) => {
 
-          let hasValue = _.includes([2, 3], value);
+          let hasValue = [2, 3].indexOf(value) > -1;
 
           assert(hasValue, 'should resolve with 2 or 3');
 
@@ -47,7 +46,7 @@ describe('.promise', function () {
       tools.promise.any([promise1, promise2, promise3])
         .then((value) => {
 
-          let hasValue = _.includes([2], value);
+          let hasValue = value === 2;
 
           assert(hasValue, 'should resolve with 2');
 
@@ -61,7 +60,7 @@ describe('.promise', function () {
       tools.promise.any([promise1])
         .then((value) => {
 
-          let hasValue = _.includes([1], value);
+          let hasValue = value === 1;
 
           assert(hasValue, 'should resolve with 1');
 
@@ -79,7 +78,9 @@ describe('.promise', function () {
           done(new Error('Should not resolve when all promises was rejected'));
         })
         .catch((value) => {
-          let isEquals = _.isEqual([1, 2, 3], value.sort());
+          let isEquals = value.indexOf(1) > -1
+            && value.indexOf(2) > -1
+            && value.indexOf(3) > -1;
 
           assert.ok(isEquals, 'should have all rejected values');
 
@@ -94,7 +95,7 @@ describe('.promise', function () {
           done(new Error('Should reject when there is only one rejected promise'));
         })
         .catch((value) => {
-          let isEquals = _.isEqual([1], value.sort());
+          let isEquals = value[0] === 1;
 
           assert.ok(isEquals, 'should have all rejected values');
 

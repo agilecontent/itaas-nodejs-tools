@@ -1,7 +1,6 @@
 'use strict';
 /* global describe, it*/
 
-const _ = require('lodash');
 const fs = require('fs');
 const should = require('should');
 const express = require('express');
@@ -19,6 +18,12 @@ let logger = tools.createLogger({
 });
 
 let serviceLocator = tools.createServiceLocator();
+
+function logList(log) {
+  return log.split('\n')
+    .filter(line => line.length > 0)
+    .map(line => JSON.parse(line));
+}
 
 describe('.express', function () {
   describe('.createCallContextMiddleware', function () {
@@ -132,7 +137,7 @@ describe('.express', function () {
         should.equal(body, 'OK');
 
         let infoLog = fs.readFileSync('./logs/test-log-dir/info.log', 'utf-8');
-        let infoLogList = _.map(_.trim(infoLog, '\n').split('\n'), JSON.parse);
+        let infoLogList = logList(infoLog);
         let requestLog = infoLogList.find((log) => log.httpLogRequest);
 
         should.exist(requestLog);
@@ -178,7 +183,7 @@ describe('.express', function () {
         should.equal(body, 'OK');
 
         let infoLog = fs.readFileSync('./logs/test-log-dir/info.log', 'utf-8');
-        let infoLogList = _.map(_.trim(infoLog, '\n').split('\n'), JSON.parse);
+        let infoLogList = logList(infoLog);
         let requestLog = infoLogList.find((log) => log.httpLogRequest);
 
         should.exist(requestLog);
@@ -223,7 +228,7 @@ describe('.express', function () {
         should.equal(body, 'OK');
 
         let infoLog = fs.readFileSync('./logs/test-log-dir/info.log', 'utf-8');
-        let infoLogList = _.map(_.trim(infoLog, '\n').split('\n'), JSON.parse);
+        let infoLogList = logList(infoLog);
         let requestLog = infoLogList.find((log) => log.httpLogRequest);
 
         should.exist(requestLog);
