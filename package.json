@@ -1,6 +1,6 @@
 {
   "name": "itaas-nodejs-tools",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "private": true,
   "description": "Node.js tools",
   "main": "./lib/index.js",
@@ -34,7 +34,6 @@
     "bunyan": "1.8.1",
     "commander": "^2.9.0",
     "license-checker": "^8.0.3",
-    "lodash": "4.13.1",
     "mkdirp": "0.5.1",
     "moment": "^2.22.0",
     "morgan": "1.7.0",
