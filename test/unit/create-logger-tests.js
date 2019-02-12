@@ -3,8 +3,20 @@
 const intercept = require('intercept-stdout');
 const fs = require('fs');
 const should = require('should');
-const _ = require('lodash');
 const tools = require('../../lib/index');
+
+function filterLog(log) {
+  return log.split('\n')
+    .filter(line => line.length > 0);
+}
+
+function getLogList(filename) {
+  const log = fs.readFileSync(filename, 'utf-8');
+  const list = filterLog(log)
+    .map(line => JSON.parse(line));
+
+  return list;
+}
 
 describe('.createLogger', function () {
   it('should create a rotating-file logger', function (done) {
@@ -37,19 +49,12 @@ describe('.createLogger', function () {
     logger.fatal('fatal');
 
     setTimeout(function () {
-      let traceLog = fs.readFileSync('./logs/test-log-dir/trace.log', 'utf-8');
-      let debugLog = fs.readFileSync('./logs/test-log-dir/debug.log', 'utf-8');
-      let infoLog = fs.readFileSync('./logs/test-log-dir/info.log', 'utf-8');
-      let warnLog = fs.readFileSync('./logs/test-log-dir/warn.log', 'utf-8');
-      let errorLog = fs.readFileSync('./logs/test-log-dir/error.log', 'utf-8');
-      let fatalLog = fs.readFileSync('./logs/test-log-dir/fatal.log', 'utf-8');
-
-      let traceLogList = _.map(_.trim(traceLog, '\n').split('\n'), JSON.parse);
-      let debugLogList = _.map(_.trim(debugLog, '\n').split('\n'), JSON.parse);
-      let infoLogList = _.map(_.trim(infoLog, '\n').split('\n'), JSON.parse);
-      let warnLogList = _.map(_.trim(warnLog, '\n').split('\n'), JSON.parse);
-      let errorLogList =_.map(_.trim(errorLog, '\n').split('\n'), JSON.parse);
-      let fatalLogList =_.map(_.trim(fatalLog, '\n').split('\n'), JSON.parse);
+      let traceLogList = getLogList('./logs/test-log-dir/trace.log');
+      let debugLogList = getLogList('./logs/test-log-dir/debug.log');
+      let infoLogList = getLogList('./logs/test-log-dir/info.log');
+      let warnLogList = getLogList('./logs/test-log-dir/warn.log');
+      let errorLogList = getLogList('./logs/test-log-dir/error.log');
+      let fatalLogList = getLogList('./logs/test-log-dir/fatal.log');
 
       //trace.log
       should.equal(traceLogList.length, 6);
@@ -115,7 +120,6 @@ describe('.createLogger', function () {
     }, 50);
   });
   it('should create a standard-streams logger', function (done) {
-
     let logger = tools.createLogger({
       name: 'app log name',
       logLevels: ['fatal', 'error', 'warn', 'info', 'debug', 'trace'],
@@ -124,9 +128,7 @@ describe('.createLogger', function () {
     });
 
     let logText = '';
-
     let unhook;
-
     let logLines;
 
     try {
@@ -136,7 +138,7 @@ describe('.createLogger', function () {
       });
       //Fatal
       logger.fatal('fatal');
-      logLines = _.trim(logText).split('\n');
+      logLines = filterLog(logText);
       should.equal(logLines.length, 6);
       for (let line of logLines) {
         let log = JSON.parse(line);
@@ -147,7 +149,7 @@ describe('.createLogger', function () {
 
       //Error
       logger.error('error');
-      logLines = _.trim(logText).split('\n');
+      logLines = filterLog(logText);
       should.equal(logLines.length, 5);
       for (let line of logLines) {
         let log = JSON.parse(line);
@@ -158,7 +160,7 @@ describe('.createLogger', function () {
 
       //Warn
       logger.warn('warn');
-      logLines = _.trim(logText).split('\n');
+      logLines = filterLog(logText);
       should.equal(logLines.length, 4);
       for (let line of logLines) {
         let log = JSON.parse(line);
@@ -169,7 +171,7 @@ describe('.createLogger', function () {
 
       //Info
       logger.info('info');
-      logLines = _.trim(logText).split('\n');
+      logLines = filterLog(logText);
       should.equal(logLines.length, 3);
       for (let line of logLines) {
         let log = JSON.parse(line);
@@ -180,7 +182,7 @@ describe('.createLogger', function () {
 
       //Debug
       logger.debug('debug');
-      logLines = _.trim(logText).split('\n');
+      logLines = filterLog(logText);
       should.equal(logLines.length, 2);
       for (let line of logLines) {
         let log = JSON.parse(line);
@@ -191,7 +193,7 @@ describe('.createLogger', function () {
 
       //Trace
       logger.trace('trace');
-      logLines = _.trim(logText).split('\n');
+      logLines = filterLog(logText);
       should.equal(logLines.length, 1);
       for (let line of logLines) {
         let log = JSON.parse(line);

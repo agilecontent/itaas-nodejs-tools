@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v5.1.2
+- [2019-02-11] *patch* [ITAAS-5862](https://jiralabone.atlassian.net/browse/ITAAS-5862) **GitHub Security Alert**
+
 ## v5.1.1
 - [2018-04-03] *patch* [TM-5231](https://jiralabone.atlassian.net/browse/TM-5231) **Add component name on the log**
 
