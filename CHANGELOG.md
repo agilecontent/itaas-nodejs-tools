@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v6.0.0
+- [2018-03-13] *major* [ITAAS-5892](https://jiralabone.atlassian.net/browse/ITAAS-5892) **Remove Cassandra related code from itaas-nodejs-tools**
+
 ## v5.1.2
 - [2019-02-11] *patch* [ITAAS-5862](https://jiralabone.atlassian.net/browse/ITAAS-5862) **GitHub Security Alert**
 
