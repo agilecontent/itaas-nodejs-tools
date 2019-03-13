@@ -5,7 +5,7 @@
 
 A collection of tools and utilities for Node.js, maintained by the iTaaS team and used by various iTaaS projects.
 
-Some of its features are designed to be generic enough for any Node.js project, while others are only suited for Express applications or for integrating with Cassandra databases.
+Some of its features are designed to be generic enough for any Node.js project, while others are only suited for Express applications.
 
 ----
 
@@ -78,14 +78,6 @@ To run all tests, including integration tests, use this command:
 ```
 npm test
 ```
-
-Note that integration tests require a running Cassandra (version 3) instance.
-The test Cassandra host can be configured in the environment variable `TEST_CASSANDRA_ENDPOINT`. It defaults to `127.0.0.1`.
-
-> **Tip:** Starting a Cassandra instance with Docker is really simple:
-> ```
-> $ docker run --name cassandra -d -p 9042:9042 cassandra:3.0.9
-> ```
 
 
 ### Debugging

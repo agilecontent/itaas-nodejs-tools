@@ -1,6 +1,6 @@
 {
   "name": "itaas-nodejs-tools",
-  "version": "5.1.2",
+  "version": "6.0.0",
   "private": true,
   "description": "Node.js tools",
   "main": "./lib/index.js",
@@ -41,7 +41,6 @@
     "uuid": "2.0.2"
   },
   "devDependencies": {
-    "cassandra-driver": "3.0.2",
     "eslint": "^2.11.1",
     "express": "^4.13.4",
     "intercept-stdout": "^0.1.2",
