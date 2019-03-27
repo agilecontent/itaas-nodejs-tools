@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v6.0.1
+- [2018-03-13] *patch* [ITAAS-5915](https://jiralabone.atlassian.net/browse/ITAAS-5915) **Update Morgan verision**
+
 ## v6.0.0
 - [2018-03-13] *major* [ITAAS-5892](https://jiralabone.atlassian.net/browse/ITAAS-5892) **Remove Cassandra related code from itaas-nodejs-tools**
 
