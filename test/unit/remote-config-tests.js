@@ -49,62 +49,62 @@ describe('Remote Config', function () {
       let remoteConfig = new RemoteConfig(configUrl, configRefreshTime);
 
       remoteConfig.getConfigObject(context)
-      .then((result)=> {
-        should.deepEqual(result, configObject);
-        configObject.result.key5 = 'newvalue';
+        .then((result)=> {
+          should.deepEqual(result, configObject);
+          configObject.result.key5 = 'newvalue';
 
-        let cached = () => { 
-          return remoteConfig.getConfigObject(context); 
-        };  
+          let cached = () => { 
+            return remoteConfig.getConfigObject(context); 
+          };  
 
-        let notCached = () => { 
-          sleep.sleep((configRefreshTime + 1));
+          let notCached = () => { 
+            sleep.sleep((configRefreshTime + 1));
 
-          nock(configServerUrl)
-           .get('/remoteconfig.json')
-           .delay(200)
-           .reply(200, configObject);
+            nock(configServerUrl)
+              .get('/remoteconfig.json')
+              .delay(200)
+              .reply(200, configObject);
 
-          return remoteConfig.getConfigObject(context); 
-        };  
+            return remoteConfig.getConfigObject(context); 
+          };  
         
-        return Promise.all([cached(), notCached()]);
-      })
-      .then((results)=>{
-        should.equal(configObject.result.key5,'newvalue');
-        should.notDeepEqual(results[0], configObject);
-        should.deepEqual(results[1], configObject);
-        done();          
-      })
-      .catch(done);
+          return Promise.all([cached(), notCached()]);
+        })
+        .then((results)=>{
+          should.equal(configObject.result.key5,'newvalue');
+          should.notDeepEqual(results[0], configObject);
+          should.deepEqual(results[1], configObject);
+          done();          
+        })
+        .catch(done);
     });
 
     it('should get error for not found url', function (done) {
       let remoteConfig = new RemoteConfig(notFoundConfigUrl, configRefreshTime);
 
       remoteConfig.getConfigObject(context)
-      .then((result)=>{
-        done(new Error('Should not resolve when url not found.')); 
-      })
-      .catch((err)=>{
-        should.equal(err.message, `Could not get a valid response from ${notFoundConfigUrl}.`);
-        done();
-      })
-      .catch(done);
+        .then((result)=>{
+          done(new Error('Should not resolve when url not found.')); 
+        })
+        .catch((err)=>{
+          should.equal(err.message, `Could not get a valid response from ${notFoundConfigUrl}.`);
+          done();
+        })
+        .catch(done);
     });
 
     it('should get error for invalid url', function (done) {
       let remoteConfig = new RemoteConfig(invalidConfigUrl, configRefreshTime);
 
       remoteConfig.getConfigObject(context)
-      .then((result)=>{
-        done(new Error('Should not resolve when url is invalid.')); 
-      })
-      .catch((err)=>{
-        should.equal(err, `Error calling url ${invalidConfigUrl}.`);
-        done();
-      })
-      .catch(done);
+        .then((result)=>{
+          done(new Error('Should not resolve when url is invalid.')); 
+        })
+        .catch((err)=>{
+          should.equal(err, `Error calling url ${invalidConfigUrl}.`);
+          done();
+        })
+        .catch(done);
     });    
   });
 });

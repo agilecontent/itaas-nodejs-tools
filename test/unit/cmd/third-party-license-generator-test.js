@@ -84,10 +84,10 @@ describe('ThirdPartyLicenseGenerator', function () {
 
       return ThirdPartyLicenseGenerator.createThirdPartyLicense(
         defaultDependenciesDetails, notAllowL1Options).then(() => {
-          let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
+        let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
 
-          licenseFile.should.be.eql(defaultDependenciesFileContent);
-        }).should.be.rejected();
+        licenseFile.should.be.eql(defaultDependenciesFileContent);
+      }).should.be.rejected();
     });
 
 
@@ -101,10 +101,10 @@ describe('ThirdPartyLicenseGenerator', function () {
 
       return ThirdPartyLicenseGenerator.createThirdPartyLicense(
         defaultDependenciesDetails, skipDep1Options).then(() => {
-          let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
+        let licenseFile = fs.readFileSync(tempFile, 'UTF-8');
 
-          licenseFile.should.be.eql('my header');
-        });
+        licenseFile.should.be.eql('my header');
+      });
     });
 
     it('ignore not filled dependency fields', function () {
