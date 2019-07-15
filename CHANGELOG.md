@@ -2,11 +2,14 @@
 
 ## Unreleased
 
+## v6.0.2
+- [2019-07-11] *patch* [ITAAS-5994](https://jiralabone.atlassian.net/browse/ITAAS-5994) **Vulnerability on itaas-nodejs-tools dependency**
+
 ## v6.0.1
-- [2018-03-13] *patch* [ITAAS-5915](https://jiralabone.atlassian.net/browse/ITAAS-5915) **Update Morgan verision**
+- [2019-03-23] *patch* [ITAAS-5915](https://jiralabone.atlassian.net/browse/ITAAS-5915) **Update Morgan verision**
 
 ## v6.0.0
-- [2018-03-13] *major* [ITAAS-5892](https://jiralabone.atlassian.net/browse/ITAAS-5892) **Remove Cassandra related code from itaas-nodejs-tools**
+- [2019-03-13] *major* [ITAAS-5892](https://jiralabone.atlassian.net/browse/ITAAS-5892) **Remove Cassandra related code from itaas-nodejs-tools**
 
 ## v5.1.2
 - [2019-02-11] *patch* [ITAAS-5862](https://jiralabone.atlassian.net/browse/ITAAS-5862) **GitHub Security Alert**

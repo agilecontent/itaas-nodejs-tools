@@ -5,29 +5,29 @@ const should = require('should'); // eslint-disable-line no-unused-vars
 const LicenseFileHandler = require('../../../lib/cmd/license-file-handler');
 
 const default_config = '{\n\
-  \"header\": \"THIRD-PARTY SOFTWARE NOTICES AND INFORMATION\\n\\n\
+  "header": "THIRD-PARTY SOFTWARE NOTICES AND INFORMATION\\n\\n\
 Note:  OTTN is not the author of the files below.\\n\\n\
 The notices below are provided for informational purposes only and are not\\n\
-the license terms under which OTTN distributes these files.\\n\\n\",\n\
-  \"file\": \"LICENSE-3RD-PARTY.txt\",\n\
-  \"skipPrefix\": \"spotlight@\",\n\
-  \"allowedLicenseList\":\n\
+the license terms under which OTTN distributes these files.\\n\\n",\n\
+  "file": "LICENSE-3RD-PARTY.txt",\n\
+  "skipPrefix": "spotlight@",\n\
+  "allowedLicenseList":\n\
     [\n\
-      \"MIT\", \"MIT*\", \"Apache-2.0\", \"Apache-2.0*\", \"BSD-3-Clause\", \"BSD-3-Clause*\",\n\
-      \"BSD\", \"BSD*\", \"ISC\", \"ISC*\", \"AFLv2.1\", \"Unlicense\", \"WTFPL\", \"BSD-2-Clause\",\n\
-      \"(MIT AND CC-BY-3.0)\", \"Public Domain\", "Apache License, Version 2.0"\n\
+      "MIT", "MIT*", "Apache-2.0", "Apache-2.0*", "BSD-3-Clause", "BSD-3-Clause*",\n\
+      "BSD", "BSD*", "ISC", "ISC*", "AFLv2.1", "Unlicense", "WTFPL", "BSD-2-Clause",\n\
+      "(MIT AND CC-BY-3.0)", "Public Domain", "Apache License, Version 2.0"\n\
     ]\n\
 }\n';
 
 const custom_config = '{\n\
-  \"header\": \"MY SUPER DUPER LICENSE 3000\",\n\
-  \"file\": \"ULTRA-LICENSE-DO-MILHAO.txt\",\n\
-  \"skipPrefix\": \"prefix@\",\n\
-  \"allowedLicenseList\":\n\
+  "header": "MY SUPER DUPER LICENSE 3000",\n\
+  "file": "ULTRA-LICENSE-DO-MILHAO.txt",\n\
+  "skipPrefix": "prefix@",\n\
+  "allowedLicenseList":\n\
     [\n\
-      \"MIT\", \"MIT*\", \"Apache-2.0\", \"Apache-2.0*\", \"BSD-3-Clause\", \"BSD-3-Clause*\",\n\
-      \"BSD\", \"BSD*\", \"ISC\", \"ISC*\", \"AFLv2.1\", \"Unlicense\", \"WTFPL\", \"BSD-2-Clause\",\n\
-      \"(MIT AND CC-BY-3.0)\", \"Public Domain\"\n\
+      "MIT", "MIT*", "Apache-2.0", "Apache-2.0*", "BSD-3-Clause", "BSD-3-Clause*",\n\
+      "BSD", "BSD*", "ISC", "ISC*", "AFLv2.1", "Unlicense", "WTFPL", "BSD-2-Clause",\n\
+      "(MIT AND CC-BY-3.0)", "Public Domain"\n\
     ]\n\
 }\n';
 
@@ -95,7 +95,7 @@ describe('LicenseFileHandler', function() {
 
     it('fails when given a valid JSON object without the needed parameters', function() {
       return LicenseFileHandler
-        .parseFile('{\"header\":\"asas\"}')
+        .parseFile('{"header":"asas"}')
         .should.be.rejectedWith({'errorCode': 'LICENSE_CONFIG_CORRUPTED'});
     });
   });

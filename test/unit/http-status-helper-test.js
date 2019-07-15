@@ -156,11 +156,11 @@ describe('HttpStatusHelper', function () {
 
     for (let test of testCases) {
       it(`returns ${test.expected} for ${test.expected ? 'valid httpStatus' : 'not valid httpStatus'} args`, 
-      function () {
-        for (let input of test.input) {
-          tools.httpStatus.isHttpStatus(input).should.be.equal(test.expected);
-        }
-      });
+        function () {
+          for (let input of test.input) {
+            tools.httpStatus.isHttpStatus(input).should.be.equal(test.expected);
+          }
+        });
     }
   });
 });
