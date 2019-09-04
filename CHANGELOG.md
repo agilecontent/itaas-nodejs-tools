@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v6.0.3
+- [2019-09-04] *patch* [ITAAS-6064](https://jiralabone.atlassian.net/browse/ITAAS-6064) **Update eslint-utils**
+
 ## v6.0.2
 - [2019-07-11] *patch* [ITAAS-5994](https://jiralabone.atlassian.net/browse/ITAAS-5994) **Vulnerability on itaas-nodejs-tools dependency**
 
