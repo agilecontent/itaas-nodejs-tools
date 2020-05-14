@@ -3,6 +3,9 @@
 ## Unreleased
 
 ## v6.0.3
+- [2020-05-14] *patch* [ITAAS-6435](https://jiralabone.atlassian.net/browse/ITAAS-6435) **Unify log format**
+
+## v6.0.3
 - [2019-09-04] *patch* [ITAAS-6064](https://jiralabone.atlassian.net/browse/ITAAS-6064) **Update eslint-utils**
 
 ## v6.0.2
