@@ -59,62 +59,62 @@ describe('.createLogger', function () {
       //trace.log
       should.equal(traceLogList.length, 6);
       should.equal(traceLogList[0].name, 'app log name');
-      should.equal(traceLogList[0].msg, 'trace');
+      should.equal(traceLogList[0].message, 'trace');
       should.equal(traceLogList[1].name, 'app log name');
-      should.equal(traceLogList[1].msg, 'debug');
+      should.equal(traceLogList[1].message, 'debug');
       should.equal(traceLogList[2].name, 'app log name');
-      should.equal(traceLogList[2].msg, 'info');
+      should.equal(traceLogList[2].message, 'info');
       should.equal(traceLogList[3].name, 'app log name');
-      should.equal(traceLogList[3].msg, 'warn');
+      should.equal(traceLogList[3].message, 'warn');
       should.equal(traceLogList[4].name, 'app log name');
-      should.equal(traceLogList[4].msg, 'error');
+      should.equal(traceLogList[4].message, 'error');
       should.equal(traceLogList[5].name, 'app log name');
-      should.equal(traceLogList[5].msg, 'fatal');
+      should.equal(traceLogList[5].message, 'fatal');
 
       //debug.log
       should.equal(debugLogList.length, 5);
       should.equal(debugLogList[0].name, 'app log name');
-      should.equal(debugLogList[0].msg, 'debug');
+      should.equal(debugLogList[0].message, 'debug');
       should.equal(debugLogList[1].name, 'app log name');
-      should.equal(debugLogList[1].msg, 'info');
+      should.equal(debugLogList[1].message, 'info');
       should.equal(debugLogList[2].name, 'app log name');
-      should.equal(debugLogList[2].msg, 'warn');
+      should.equal(debugLogList[2].message, 'warn');
       should.equal(debugLogList[3].name, 'app log name');
-      should.equal(debugLogList[3].msg, 'error');
+      should.equal(debugLogList[3].message, 'error');
       should.equal(debugLogList[4].name, 'app log name');
-      should.equal(debugLogList[4].msg, 'fatal');
+      should.equal(debugLogList[4].message, 'fatal');
 
       //info.log
       should.equal(infoLogList.length, 4);
       should.equal(infoLogList[0].name, 'app log name');
-      should.equal(infoLogList[0].msg, 'info');
+      should.equal(infoLogList[0].message, 'info');
       should.equal(infoLogList[1].name, 'app log name');
-      should.equal(infoLogList[1].msg, 'warn');
+      should.equal(infoLogList[1].message, 'warn');
       should.equal(infoLogList[2].name, 'app log name');
-      should.equal(infoLogList[2].msg, 'error');
+      should.equal(infoLogList[2].message, 'error');
       should.equal(infoLogList[3].name, 'app log name');
-      should.equal(infoLogList[3].msg, 'fatal');
+      should.equal(infoLogList[3].message, 'fatal');
 
       //warn.log
       should.equal(warnLogList.length, 3);
       should.equal(warnLogList[0].name, 'app log name');
-      should.equal(warnLogList[0].msg, 'warn');
+      should.equal(warnLogList[0].message, 'warn');
       should.equal(warnLogList[1].name, 'app log name');
-      should.equal(warnLogList[1].msg, 'error');
+      should.equal(warnLogList[1].message, 'error');
       should.equal(warnLogList[2].name, 'app log name');
-      should.equal(warnLogList[2].msg, 'fatal');
+      should.equal(warnLogList[2].message, 'fatal');
 
       //error.log
       should.equal(errorLogList.length, 2);
       should.equal(errorLogList[0].name, 'app log name');
-      should.equal(errorLogList[0].msg, 'error');
+      should.equal(errorLogList[0].message, 'error');
       should.equal(errorLogList[1].name, 'app log name');
-      should.equal(errorLogList[1].msg, 'fatal');
+      should.equal(errorLogList[1].message, 'fatal');
 
       //fatal.log
       should.equal(fatalLogList.length, 1);
       should.equal(fatalLogList[0].name, 'app log name');
-      should.equal(fatalLogList[0].msg, 'fatal');
+      should.equal(fatalLogList[0].message, 'fatal');
 
       done();
     }, 50);
@@ -143,7 +143,7 @@ describe('.createLogger', function () {
       for (let line of logLines) {
         let log = JSON.parse(line);
         should.equal(log.name, 'app log name');
-        should.equal(log.msg, 'fatal');
+        should.equal(log.message, 'fatal');
       }
       logText = '';
 
@@ -154,7 +154,7 @@ describe('.createLogger', function () {
       for (let line of logLines) {
         let log = JSON.parse(line);
         should.equal(log.name, 'app log name');
-        should.equal(log.msg, 'error');
+        should.equal(log.message, 'error');
       }
       logText = '';
 
@@ -165,7 +165,7 @@ describe('.createLogger', function () {
       for (let line of logLines) {
         let log = JSON.parse(line);
         should.equal(log.name, 'app log name');
-        should.equal(log.msg, 'warn');
+        should.equal(log.message, 'warn');
       }
       logText = '';
 
@@ -176,7 +176,7 @@ describe('.createLogger', function () {
       for (let line of logLines) {
         let log = JSON.parse(line);
         should.equal(log.name, 'app log name');
-        should.equal(log.msg, 'info');
+        should.equal(log.message, 'info');
       }
       logText = '';
 
@@ -187,7 +187,7 @@ describe('.createLogger', function () {
       for (let line of logLines) {
         let log = JSON.parse(line);
         should.equal(log.name, 'app log name');
-        should.equal(log.msg, 'debug');
+        should.equal(log.message, 'debug');
       }
       logText = '';
 
@@ -198,7 +198,7 @@ describe('.createLogger', function () {
       for (let line of logLines) {
         let log = JSON.parse(line);
         should.equal(log.name, 'app log name');
-        should.equal(log.msg, 'trace');
+        should.equal(log.message, 'trace');
       }
       logText = '';
 

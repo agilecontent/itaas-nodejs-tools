@@ -1,5 +1,5 @@
 'use strict';
-/* global describe, it*/
+/* global describe, it, beforeEach*/
 
 const fs = require('fs');
 const should = require('should');
@@ -23,6 +23,22 @@ function logList(log) {
   return log.split('\n')
     .filter(line => line.length > 0)
     .map(line => JSON.parse(line));
+}
+
+function morganGetLog(app, done, fn, route = '/') {
+  let server = app.listen(3001);
+
+  request(`http://127.0.0.1:3001${route}`, function (error, response, body) {
+    server.close();
+
+    let infoLog = fs.readFileSync('./logs/test-log-dir/info.log', 'utf-8');
+    let infoLogList = logList(infoLog);
+    let requestLog = infoLogList.find((log) => log.message.http);
+
+    fn(requestLog);
+
+    done();
+  });
 }
 
 describe('.express', function () {
@@ -103,12 +119,14 @@ describe('.express', function () {
     });
   });
   describe('.createMorganMiddleware', function () {
-    it('should log request with the request logger', function (done) {
+    let app;
+    beforeEach(() => {
       //Clean the files
-      if (fs.existsSync('./logs/test-log-dir/info.log'))
+      if (fs.existsSync('./logs/test-log-dir/info.log')) {
         fs.truncateSync('./logs/test-log-dir/info.log', 0);
+      }
 
-      let app = express();
+      app = express();
 
       app.locals.config = config;
       app.locals.logger = logger;
@@ -120,7 +138,9 @@ describe('.express', function () {
         app.locals.logger,
         app.locals.serviceLocator,
         (req, res, context) => { res.locals.context = context; }));
+    });
 
+    it('should log request with the request logger', function (done) {
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger, 'common'));
 
@@ -128,45 +148,12 @@ describe('.express', function () {
         res.send('OK');
       });
 
-      let server = app.listen(3001);
-
-      request('http://127.0.0.1:3001', function (error, response, body) {
-        server.close();
-
-        should.not.exist(error);
-        should.equal(body, 'OK');
-
-        let infoLog = fs.readFileSync('./logs/test-log-dir/info.log', 'utf-8');
-        let infoLogList = logList(infoLog);
-        let requestLog = infoLogList.find((log) => log.httpLogRequest);
-
-        should.exist(requestLog);
-        should.exist(requestLog.httpLogRequest);
-
-        requestLog.httpLogRequest.should.containEql('GET / HTTP/1.1');
-        requestLog.httpLogRequest.should.containEql(' 200 ');
-
-        done();
+      morganGetLog(app, done, requestLog => {
+        requestLog.message.http.should.containEql('GET / HTTP/1.1');
+        requestLog.message.http.should.containEql(' 200 ');
       });
     });
     it('should use accept format', function (done) {
-      //Clean the files
-      if (fs.existsSync('./logs/test-log-dir/info.log'))
-        fs.truncateSync('./logs/test-log-dir/info.log', 0);
-
-      let app = express();
-
-      app.locals.config = config;
-      app.locals.logger = logger;
-      app.locals.serviceLocator = serviceLocator;
-
-      //Middlewares
-      app.use(tools.express.createCallContextMiddleware(
-        app.locals.config,
-        app.locals.logger,
-        app.locals.serviceLocator,
-        (req, res, context) => { res.locals.context = context; }));
-
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger, ':method :url :status :http-version'));
 
@@ -174,44 +161,11 @@ describe('.express', function () {
         res.send('OK');
       });
 
-      let server = app.listen(3001);
-
-      request('http://127.0.0.1:3001', function (error, response, body) {
-        server.close();
-
-        should.not.exist(error);
-        should.equal(body, 'OK');
-
-        let infoLog = fs.readFileSync('./logs/test-log-dir/info.log', 'utf-8');
-        let infoLogList = logList(infoLog);
-        let requestLog = infoLogList.find((log) => log.httpLogRequest);
-
-        should.exist(requestLog);
-        should.exist(requestLog.httpLogRequest);
-
-        should.equal(requestLog.httpLogRequest, 'GET / 200 1.1');
-
-        done();
+      morganGetLog(app, done, requestLog => {
+        should.equal(requestLog.message.http, 'GET / 200 1.1');
       });
     });
     it('should log request with the request logger', function (done) {
-      //Clean the files
-      if (fs.existsSync('./logs/test-log-dir/info.log'))
-        fs.truncateSync('./logs/test-log-dir/info.log', 0);
-
-      let app = express();
-
-      app.locals.config = config;
-      app.locals.logger = logger;
-      app.locals.serviceLocator = serviceLocator;
-
-      //Middlewares
-      app.use(tools.express.createCallContextMiddleware(
-        app.locals.config,
-        app.locals.logger,
-        app.locals.serviceLocator,
-        (req, res, context) => { res.locals.context = context; }));
-
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger));
 
@@ -219,26 +173,37 @@ describe('.express', function () {
         res.send('OK');
       });
 
-      let server = app.listen(3001);
-
-      request('http://127.0.0.1:3001', function (error, response, body) {
-        server.close();
-
-        should.not.exist(error);
-        should.equal(body, 'OK');
-
-        let infoLog = fs.readFileSync('./logs/test-log-dir/info.log', 'utf-8');
-        let infoLogList = logList(infoLog);
-        let requestLog = infoLogList.find((log) => log.httpLogRequest);
-
-        should.exist(requestLog);
-        should.exist(requestLog.httpLogRequest);
-
-        requestLog.httpLogRequest.should.containEql('GET / HTTP/1.1');
-        requestLog.httpLogRequest.should.containEql(' 200 ');
-
-        done();
+      morganGetLog(app, done, requestLog => {
+        requestLog.message.http.should.containEql('GET / HTTP/1.1');
+        requestLog.message.http.should.containEql(' 200 ');
       });
+    });
+    it('should log route parameters', (done) => {
+      app.use(tools.express.createMorganMiddleware(
+        (req, res) => res.locals.context.logger));
+
+      app.use('/:vish', (req, res, next) => {
+        res.send('OK');
+      });
+
+      let reoss = 'reoss';
+      morganGetLog(app, done, requestLog => {
+        should.equal(requestLog.message.route.vish, reoss);
+      }, `/${reoss}`);
+    });
+
+    it('should log query parameters', (done) => {
+      app.use(tools.express.createMorganMiddleware(
+        (req, res) => res.locals.context.logger));
+
+      app.use('/', (req, res, next) => {
+        res.send('OK');
+      });
+
+      let reoss = 'reoss';
+      morganGetLog(app, done, requestLog => {
+        should.equal(requestLog.message.query.vish, reoss);
+      }, `/?vish=${reoss}`);
     });
     it('fail for invalid arguments', function (done) {
       (function createLogger() {
