@@ -33,7 +33,7 @@ function morganGetLog(app, done, fn, route = '/') {
 
     let infoLog = fs.readFileSync('./logs/test-log-dir/info.log', 'utf-8');
     let infoLogList = logList(infoLog);
-    let requestLog = infoLogList.find((log) => log.message.http);
+    let requestLog = infoLogList.find((log) => log.http);
 
     fn(requestLog);
 
@@ -149,8 +149,8 @@ describe('.express', function () {
       });
 
       morganGetLog(app, done, requestLog => {
-        requestLog.message.http.should.containEql('GET / HTTP/1.1');
-        requestLog.message.http.should.containEql(' 200 ');
+        requestLog.http.should.containEql('GET / HTTP/1.1');
+        requestLog.http.should.containEql(' 200 ');
       });
     });
     it('should use accept format', function (done) {
@@ -162,7 +162,7 @@ describe('.express', function () {
       });
 
       morganGetLog(app, done, requestLog => {
-        should.equal(requestLog.message.http, 'GET / 200 1.1');
+        should.equal(requestLog.http, 'GET / 200 1.1');
       });
     });
     it('should log request with the request logger', function (done) {
@@ -174,8 +174,8 @@ describe('.express', function () {
       });
 
       morganGetLog(app, done, requestLog => {
-        requestLog.message.http.should.containEql('GET / HTTP/1.1');
-        requestLog.message.http.should.containEql(' 200 ');
+        requestLog.http.should.containEql('GET / HTTP/1.1');
+        requestLog.http.should.containEql(' 200 ');
       });
     });
     it('should log route parameters', (done) => {
@@ -188,7 +188,7 @@ describe('.express', function () {
 
       let reoss = 'reoss';
       morganGetLog(app, done, requestLog => {
-        should.equal(requestLog.message.route.vish, reoss);
+        should.equal(requestLog.route.vish, reoss);
       }, `/${reoss}`);
     });
 
@@ -202,7 +202,7 @@ describe('.express', function () {
 
       let reoss = 'reoss';
       morganGetLog(app, done, requestLog => {
-        should.equal(requestLog.message.query.vish, reoss);
+        should.equal(requestLog.query.vish, reoss);
       }, `/?vish=${reoss}`);
     });
     it('fail for invalid arguments', function (done) {
