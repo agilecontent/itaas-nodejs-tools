@@ -31,26 +31,26 @@
     "itaas"
   ],
   "dependencies": {
-    "winston": "^3.2.1",
     "commander": "^2.9.0",
     "license-checker": "^8.0.3",
-    "mkdirp": "0.5.1",
-    "moment": "^2.22.0",
+    "mkdirp": "^1.0.4",
+    "moment": "^2.27.0",
     "morgan": "1.9.1",
     "request": "^2.81.0",
-    "uuid": "2.0.2"
+    "uuid": "2.0.2",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
-    "eslint": "^6.3.0",
+    "eslint": "^7.6.0",
     "express": "^4.13.4",
+    "husky": "0.14.3",
     "intercept-stdout": "^0.1.2",
     "istanbul": "^0.4.3",
     "mocha": "^6.1.4",
-    "nock": "^9.0.14",
-    "nodemon": "^1.9.2",
+    "nock": "^13.0.3",
+    "nodemon": "^2.0.4",
     "should": "^9.0.1",
-    "sleep": "^5.1.1",
-    "husky": "0.14.3"
+    "sleep": "^5.1.1"
   },
   "author": "iTaaS",
   "license": "ISC",
