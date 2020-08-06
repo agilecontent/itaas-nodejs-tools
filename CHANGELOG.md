@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## v6.0.5
+## v7.0.0
 - [2020-08-06] *patch* [ITAAS-6413](https://jiralabone.atlassian.net/browse/ITAAS-6413) **Vulnerability on itaas-nodejs-tools dependency**
 
 ## v6.0.4
