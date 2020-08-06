@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v7.0.0
+- [2020-08-06] *major* [ITAAS-6413](https://jiralabone.atlassian.net/browse/ITAAS-6413) **Vulnerability on itaas-nodejs-tools dependency**
+
 ## v6.0.4
 - [2020-05-14] *patch* [ITAAS-6435](https://jiralabone.atlassian.net/browse/ITAAS-6435) **Unify log format**
 
