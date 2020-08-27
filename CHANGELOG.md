@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v7.0.1
+- [2020-08-26] *patch* [ITAAS-6665](https://jiralabone.atlassian.net/browse/ITAAS-6665) **NodeJS are not bringing instanceId on logs from http requests**
+
 ## v7.0.0
 - [2020-08-06] *major* [ITAAS-6413](https://jiralabone.atlassian.net/browse/ITAAS-6413) **Vulnerability on itaas-nodejs-tools dependency**
 

@@ -1,6 +1,6 @@
 {
   "name": "itaas-nodejs-tools",
-  "version": "7.0.0",
+  "version": "7.0.1",
   "private": true,
   "description": "Node.js tools",
   "main": "./lib/index.js",
