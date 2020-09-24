@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v7.1.0
+- [2020-09-24] *minor* [ITAAS-6352](https://jiralabone.atlassian.net/browse/ITAAS-6352) **Create x-request-id header**
+
 ## v7.0.1
 - [2020-08-26] *patch* [ITAAS-6665](https://jiralabone.atlassian.net/browse/ITAAS-6665) **NodeJS are not bringing instanceId on logs from http requests**
 
