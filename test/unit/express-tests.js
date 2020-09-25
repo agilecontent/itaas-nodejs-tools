@@ -178,6 +178,32 @@ describe('.express', function () {
         requestLog.http.should.containEql(' 200 ');
       });
     });
+    it('should log request-id with the request logger', function (done) {
+      app.use(tools.express.createMorganMiddleware(
+        (req, res) => res.locals.context.logger));
+
+      app.use('/', (req, res, next) => {
+        res.header('request-id','vish');
+        res.send('OK');
+      });
+
+      morganGetLog(app, done, requestLog => {
+        requestLog.traceparent.should.equal('vish');
+      });
+    });
+    it('should log traceparent with the request logger', function (done) {
+      app.use(tools.express.createMorganMiddleware(
+        (req, res) => res.locals.context.logger));
+
+      app.use('/', (req, res, next) => {
+        res.header('traceparent','vish');
+        res.send('OK');
+      });
+
+      morganGetLog(app, done, requestLog => {
+        requestLog.traceparent.should.equal('vish');
+      });
+    });
     it('should log route parameters', (done) => {
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger));
