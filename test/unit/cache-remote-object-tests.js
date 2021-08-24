@@ -6,7 +6,6 @@ const should = require('should');
 const CacheRemoteObject = require('../../lib/cache-remote-object');
 const uuid = require('uuid').v4;
 const tools = require('../../lib/index');
-const sleep = require('sleep');
 
 const objectServerUrl = 'http://remote.object';
 const objectUrl = 'http://remote.object/remoteobject.json';
@@ -77,7 +76,7 @@ describe('Cache Remote Object', function () {
       remoteObject.getFresh(context)
         .then((result) => {
           should.deepEqual(result, remoteObjectValue);
-          sleep.sleep(objectRefreshTime + 1);
+          new Promise(() => setTimeout(objectRefreshTime + 1));
           should.ok(remoteObject.isCacheStale(context));
           done();
         }).catch((err) => {
@@ -98,7 +97,7 @@ describe('Cache Remote Object', function () {
 
       let cached = remoteObject.getCached(context);
       should.equal(cached, null);
-      sleep.sleep(objectRefreshTime + 2);
+      sleep(objectRefreshTime + 2);
     });
   });
 
@@ -170,7 +169,7 @@ describe('Cache Remote Object', function () {
 
           let notCached = () => {
             nock.cleanAll();
-            sleep.sleep((objectRefreshTime + 1));
+            sleep((objectRefreshTime + 1));
             nock(objectServerUrl)
               .get('/remoteobject.json')
               .reply(200, remoteObjectValue);
@@ -190,3 +189,9 @@ describe('Cache Remote Object', function () {
     });
   });
 });
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+} 

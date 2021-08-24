@@ -6,7 +6,6 @@ const should = require('should');
 const RemoteConfig = require('../../lib/remote-config');
 const uuid = require('uuid').v4;
 const tools = require('../../lib/index');
-const sleep = require('sleep');
 
 let callId = uuid();
 let config = { key: 'value' };
@@ -58,7 +57,7 @@ describe('Remote Config', function () {
           };  
 
           let notCached = () => { 
-            sleep.sleep((configRefreshTime + 1));
+            setTimeout((configRefreshTime + 1));
 
             nock(configServerUrl)
               .get('/remoteconfig.json')
