@@ -43,39 +43,35 @@ describe('Remote Config', function () {
         .reply(404, 'Not Found');        
     });
 
-    it('should return config object : cached and not cached.', function (done) {
+    it('should return config object : cached and not cached.', async () => {
       this.timeout(10000);
       let remoteConfig = new RemoteConfig(configUrl, configRefreshTime);
 
-      remoteConfig.getConfigObject(context)
-        .then((result)=> {
-          should.deepEqual(result, configObject);
-          configObject.result.key5 = 'newvalue';
-
-          let cached = () => { 
-            return remoteConfig.getConfigObject(context); 
-          };  
-
-          let notCached = () => { 
-            setTimeout((configRefreshTime + 1));
-
-            nock(configServerUrl)
-              .get('/remoteconfig.json')
-              .delay(200)
-              .reply(200, configObject);
-
-            return remoteConfig.getConfigObject(context); 
-          };  
+      let result = await remoteConfig.getConfigObject(context);
         
-          return Promise.all([cached(), notCached()]);
-        })
-        .then((results)=>{
-          should.equal(configObject.result.key5,'newvalue');
-          should.notDeepEqual(results[0], configObject);
-          should.deepEqual(results[1], configObject);
-          done();          
-        })
-        .catch(done);
+      should.deepEqual(result, configObject);
+      configObject.result.key5 = 'newvalue';
+
+      let cached = () => { 
+        return remoteConfig.getConfigObject(context); 
+      };  
+
+      let notCached = async () => { 
+        await sleep(configRefreshTime + 1);
+
+        nock(configServerUrl)
+          .get('/remoteconfig.json')
+          .delay(200)
+          .reply(200, configObject);
+
+        return remoteConfig.getConfigObject(context); 
+      };
+        
+      const results = await Promise.all([cached(), notCached()]);
+        
+      should.equal(configObject.result.key5,'newvalue');
+      should.notDeepEqual(results[0], configObject);
+      should.deepEqual(results[1], configObject);
     });
 
     it('should get error for not found url', function (done) {
@@ -107,3 +103,9 @@ describe('Remote Config', function () {
     });    
   });
 });
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+} 

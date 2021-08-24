@@ -70,18 +70,13 @@ describe('Cache Remote Object', function () {
         });
     });
 
-    it('should return true if cache previously outdated', (done) => {
+    it('should return true if cache previously outdated', async () => {
       let remoteObject = new CacheRemoteObject(objectUrl, objectRefreshTime);
 
-      remoteObject.getFresh(context)
-        .then((result) => {
-          should.deepEqual(result, remoteObjectValue);
-          new Promise(() => setTimeout(objectRefreshTime + 1));
-          should.ok(remoteObject.isCacheStale(context));
-          done();
-        }).catch((err) => {
-          done(err);
-        });
+      const result = await remoteObject.getFresh(context);       
+      should.deepEqual(result, remoteObjectValue);
+      await sleep(objectRefreshTime + 1);
+      should.ok(remoteObject.isCacheStale(context));
     });
   });
 
@@ -92,12 +87,12 @@ describe('Cache Remote Object', function () {
         .reply(200, remoteObjectValue);
     });
 
-    it('First call should return null.', function () {
+    it('First call should return null.', async () => {
       let remoteObject = new CacheRemoteObject(objectUrl, objectRefreshTime);
 
       let cached = remoteObject.getCached(context);
       should.equal(cached, null);
-      sleep(objectRefreshTime + 2);
+      await sleep(objectRefreshTime + 2);
     });
   });
 
