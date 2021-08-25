@@ -105,7 +105,11 @@ describe('Remote Config', function () {
 });
 
 function sleep(s) {
+  return mSleep(s * 1000) ; 
+}
+
+function mSleep(ms){
   return new Promise((resolve) => {
-    setTimeout(resolve, s * 1000);
+    setTimeout(resolve, ms);
   });
-} 
+}
