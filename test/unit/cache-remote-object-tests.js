@@ -6,7 +6,6 @@ const should = require('should');
 const CacheRemoteObject = require('../../lib/cache-remote-object');
 const uuid = require('uuid').v4;
 const tools = require('../../lib/index');
-const sleep = require('sleep');
 
 const objectServerUrl = 'http://remote.object';
 const objectUrl = 'http://remote.object/remoteobject.json';
@@ -29,7 +28,7 @@ const remoteObjectValue = {
   }
 };
 
-describe('Cache Remote Object', function () {
+describe('Cache Remote Object', () => {
   describe('.create', function () {
     it('return an CacheRemoteObject object', () => {
       let remoteObject = CacheRemoteObject.create(objectUrl, objectRefreshTime);
@@ -58,31 +57,22 @@ describe('Cache Remote Object', function () {
       should.equal(remoteObject.isCacheStale(context), true);
     });
 
-    it('should return false if cache previously refreshed', (done) => {
+    it('should return false if cache previously refreshed', async () => {
       let remoteObject = new CacheRemoteObject(objectUrl, objectRefreshTime);
 
-      remoteObject.getFresh(context)
-        .then((result) => {
-          should.deepEqual(result, remoteObjectValue);
-          should.equal(remoteObject.isCacheStale(context), false);
-          done();
-        }).catch((err) => {
-          done(err);
-        });
+      const result = await remoteObject.getFresh(context);
+        
+      should.deepEqual(result, remoteObjectValue);
+      should.equal(remoteObject.isCacheStale(context), false);
     });
 
-    it('should return true if cache previously outdated', (done) => {
+    it('should return true if cache previously outdated', async () => {
       let remoteObject = new CacheRemoteObject(objectUrl, objectRefreshTime);
 
-      remoteObject.getFresh(context)
-        .then((result) => {
-          should.deepEqual(result, remoteObjectValue);
-          sleep.sleep(objectRefreshTime + 1);
-          should.ok(remoteObject.isCacheStale(context));
-          done();
-        }).catch((err) => {
-          done(err);
-        });
+      const result = await remoteObject.getFresh(context);       
+      should.deepEqual(result, remoteObjectValue);
+      await sleep(objectRefreshTime + 1);
+      should.ok(remoteObject.isCacheStale(context));
     });
   });
 
@@ -93,12 +83,12 @@ describe('Cache Remote Object', function () {
         .reply(200, remoteObjectValue);
     });
 
-    it('First call should return null.', function () {
+    it('First call should return null.', async () => {
       let remoteObject = new CacheRemoteObject(objectUrl, objectRefreshTime);
 
       let cached = remoteObject.getCached(context);
       should.equal(cached, null);
-      sleep.sleep(objectRefreshTime + 2);
+      await sleep(objectRefreshTime + 2);
     });
   });
 
@@ -156,37 +146,40 @@ describe('Cache Remote Object', function () {
         .catch(done);
     });
 
-    it('should return object : cached and not cached.', function (done) {
+    it('should return object : cached and not cached.', async () => {
       let remoteObject = new CacheRemoteObject(objectUrl, objectRefreshTime);
 
-      remoteObject.getFresh(context)
-        .then((result) => {
-          should.deepEqual(result, remoteObjectValue);
-          remoteObjectValue.result.key5 = 'newvalue';
+      const result = await remoteObject.getFresh(context);
+        
+      should.deepEqual(result, remoteObjectValue);
+      remoteObjectValue.result.key5 = 'newvalue';
 
-          let cached = () => {
-            return remoteObject.getCached(context);
-          };
+      let cached = () => {
+        return remoteObject.getCached(context);
+      };
 
-          let notCached = () => {
-            nock.cleanAll();
-            sleep.sleep((objectRefreshTime + 1));
-            nock(objectServerUrl)
-              .get('/remoteobject.json')
-              .reply(200, remoteObjectValue);
+      let notCached = async () => {
+        nock.cleanAll();
+        await sleep((objectRefreshTime + 1));
+        nock(objectServerUrl)
+          .get('/remoteobject.json')
+          .reply(200, remoteObjectValue);
 
-            return remoteObject.getFresh(context);
-          };
+        return remoteObject.getFresh(context);
+      };
 
-          return Promise.all([cached(), notCached()]);
-        })
-        .then((results) => {
-          should.equal(remoteObjectValue.result.key5, 'newvalue');
-          should.notDeepEqual(results[0], remoteObjectValue);
-          should.deepEqual(results[1], remoteObjectValue);
-          done();
-        })
-        .catch(done);
+      const results = await Promise.all([cached(), notCached()]);
+        
+        
+      should.equal(remoteObjectValue.result.key5, 'newvalue');
+      should.notDeepEqual(results[0], remoteObjectValue);
+      should.deepEqual(results[1], remoteObjectValue);
     });
   });
 });
+
+function sleep(s) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, s * 1000);
+  });
+} 

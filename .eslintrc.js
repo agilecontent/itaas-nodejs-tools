@@ -1,8 +1,8 @@
 module.exports = {
   'extends': 'eslint:recommended',
   'env': {
-    'node': true,
-    'es6': true
+    'node': true,    
+    'es2017' : true
   },
   'rules': {
     'max-len': [2, 120, 2],

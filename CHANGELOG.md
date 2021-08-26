@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v7.2.0
+- [2021-08-26] *minor* [ITAAS-7013](https://jiralabone.atlassian.net/browse/ITAAS-7013) **Gerar release de itaas-framework para node >14.x**
+
 ## v7.1.0
 - [2020-09-24] *minor* [ITAAS-6352](https://jiralabone.atlassian.net/browse/ITAAS-6352) **Create x-request-id header**
 
