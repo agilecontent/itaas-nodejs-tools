@@ -41,6 +41,27 @@ function morganGetLog(app, done, fn, route = '/') {
   });
 }
 
+function morganPostLog(app, done, fn, route = '/') {
+  let server = app.listen(3001);
+
+  request({
+    headers: { 'Content-Type': 'application/json' },
+    uri: `http://127.0.0.1:3001${route}`,
+    method: 'POST',
+    body: '{ "batatinha": "cool" }'
+  }, function (error, response, body) {
+    server.close();
+
+    let infoLog = fs.readFileSync('./logs/test-log-dir/info.log', 'utf-8');
+    let infoLogList = logList(infoLog);
+    let requestLog = infoLogList.find((log) => log.http);
+
+    fn(requestLog);
+
+    done();
+  });
+}
+
 describe('.express', function () {
   describe('.createCallContextMiddleware', function () {
     it('should build the CallContext', function (done) {
@@ -231,6 +252,20 @@ describe('.express', function () {
         should.equal(requestLog.query.vish, reoss);
       }, `/?vish=${reoss}`);
     });
+    it('should log request body', (done) => {
+      app.use(express.json());
+      app.use(tools.express.createMorganMiddleware(
+        (req, res) => res.locals.context.logger));
+
+      app.post('/', (req, res, next) => {
+        res.send('OK');
+      });
+
+      let valeu = 'cool';
+      morganPostLog(app, done, requestLog => {
+        should.equal(requestLog.body.batatinha, valeu);
+      });
+    });    
     it('fail for invalid arguments', function (done) {
       (function createLogger() {
         tools.express.createMorganMiddleware();

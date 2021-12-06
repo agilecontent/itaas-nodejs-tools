@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v7.4.0
+- [2021-12-06] *minor* [ITAAS-7153](https://jiralabone.atlassian.net/browse/ITAAS-7153) **Melhorias de log**
+
 ## v7.3.0
 - [2021-11-17] *minor* [ITAAS-6929](https://jiralabone.atlassian.net/browse/ITAAS-6929) **Vulnerability on itaas-nodejs-tools dependency**
 
