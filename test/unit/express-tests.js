@@ -99,6 +99,7 @@ describe('.express', function () {
         done();
       });
     });
+    
     it('should use uux-call-context-id from HTTP header', function (done) {
       let app = express();
 
@@ -139,6 +140,7 @@ describe('.express', function () {
       });
     });
   });
+  
   describe('.createMorganMiddleware', function () {
     let app;
     beforeEach(() => {
@@ -174,6 +176,7 @@ describe('.express', function () {
         requestLog.http.should.containEql(' 200 ');
       });
     });
+    
     it('should use accept format', function (done) {
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger, ':method :url :status :http-version'));
@@ -186,6 +189,7 @@ describe('.express', function () {
         should.equal(requestLog.http, 'GET / 200 1.1');
       });
     });
+    
     it('should log request with the request logger', function (done) {
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger));
@@ -199,6 +203,7 @@ describe('.express', function () {
         requestLog.http.should.containEql(' 200 ');
       });
     });
+    
     it('should log request-id with the request logger', function (done) {
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger));
@@ -212,6 +217,7 @@ describe('.express', function () {
         requestLog.traceparent.should.equal('vish');
       });
     });
+    
     it('should log traceparent with the request logger', function (done) {
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger));
@@ -225,6 +231,7 @@ describe('.express', function () {
         requestLog.traceparent.should.equal('vish');
       });
     });
+    
     it('should log route parameters', (done) => {
       app.use(tools.express.createMorganMiddleware(
         (req, res) => res.locals.context.logger));
@@ -252,6 +259,20 @@ describe('.express', function () {
         should.equal(requestLog.query.vish, reoss);
       }, `/?vish=${reoss}`);
     });
+
+    it('should log request response time', function (done) {
+      app.use(tools.express.createMorganMiddleware(
+        (req, res) => res.locals.context.logger));
+
+      app.use('/', (req, res, next) => {
+        res.send('OK');
+      });
+
+      morganGetLog(app, done, requestLog => {
+        requestLog.http.should.match(/- [0-9]+\.[0-9]+ ms$/);        
+      });
+    });
+    
     it('should log request body', (done) => {
       app.use(express.json());
       app.use(tools.express.createMorganMiddleware(
@@ -261,9 +282,9 @@ describe('.express', function () {
         res.send('OK');
       });
 
-      let valeu = 'cool';
+      let value = 'cool';
       morganPostLog(app, done, requestLog => {
-        should.equal(requestLog.body.batatinha, valeu);
+        should.equal(requestLog.body.batatinha, value);
       });
     });    
     it('fail for invalid arguments', function (done) {
