@@ -603,12 +603,13 @@ This function accepts these parameters:
 |-----------|------|----------|-------------|---------------|
 | `getLogger` | function | Yes | Function that returns the logger to be used. It can have 2 parameters: the first is the `req` from Express, the second is `res`. If the [call context middleware] is also being used, this function should return the logger within the context. | - |
 | `format` | string | No | The format to use for the HTTP requests log messages. It must be one of the [predefined formats from Morgan](https://github.com/expressjs/morgan#predefined-formats) | `combined` |
+| `customFormatBody` | function | No | Function that will be used to customize the body formatting. It have 1 parameter, the body, and should returns the same body formated | - |
 
 ```javascript
 const tools = require('itaas-nodejs-tools');
 
 let morganMiddleware = tools.express.createMorganMiddleware(
-  (req, res) => res.locals.context.logger, 'common');
+  (req, res) => res.locals.context.logger, 'common', (body) => return body);
 
 app.use(morganMiddleware);
 ```
