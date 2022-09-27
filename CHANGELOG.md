@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v7.5.0
+- [2022-09-27] *minor* [ITAAS-7471](https://jiralabone.atlassian.net/browse/ITAAS-7471) **Novo parametro para customizar o body nos logs (Morgan)**
+
 ## v7.4.0
 - [2021-12-06] *minor* [ITAAS-7153](https://jiralabone.atlassian.net/browse/ITAAS-7153) **Melhorias de log**
 

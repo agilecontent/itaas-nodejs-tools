@@ -290,7 +290,7 @@ describe('.express', function () {
 
     it('should log request body customized', (done) => {
 
-      let functionCustomFormatBody = (a) => { return "******"; };
+      let functionCustomFormatBody = (a) => { return '******'; };
 
       app.use(express.json());
       app.use(tools.express.createMorganMiddleware(
@@ -307,8 +307,8 @@ describe('.express', function () {
 
     it('should fail if customFormatBody parameter isn`t a function', (done) => {
       should(function () {
-        tools.express.createMorganMiddleware((req, res) => { }, undefined, "functionCustomFormatBodyIsString")
-      }).throw('Missing argument "customFormatBody" function')
+        tools.express.createMorganMiddleware((req, res) => { }, undefined, 'functionCustomFormatBodyIsString');
+      }).throw('Missing argument "customFormatBody" function');
       done();
     });
 
