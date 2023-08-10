@@ -1,8 +1,6 @@
 #!/bin/bash
 set -eo pipefail
 
-echo "starting creating tag"
-
 APP_VERSION=$(cat package.json | grep -Po 'version\"\:[ ]*\"\K[0-9.]+')
 REPOSITORY_NAME="itaas-nodejs-tools"
 
