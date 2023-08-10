@@ -3,6 +3,10 @@
 ## Unreleased
 
 ## v7.5.0
+- [2023-06-26] *Chore* [ITAAS-7584](https://agile-content.atlassian.net/browse/ITAAS-7584)
+**Add script to create a TAG in Git**
+
+## v7.5.0
 - [2022-09-27] *minor* [ITAAS-7471](https://jiralabone.atlassian.net/browse/ITAAS-7471) **Novo parametro para customizar o body nos logs (Morgan)**
 
 ## v7.4.0
