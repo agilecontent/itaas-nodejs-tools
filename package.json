@@ -54,6 +54,11 @@
     "nodemon": "^2.0.15",  
     "should": "^9.0.1"
   },
+  "overrides": {
+    "winston": {
+      "@dabh/diagnostics": "2.0.3"
+    }
+  },
   "author": "iTaaS",
   "license": "ISC",
   "homepage": "https://github.com/agilecontent/itaas-nodejs-tools#readme"
