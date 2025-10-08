@@ -55,5 +55,8 @@
   },
   "author": "iTaaS",
   "license": "ISC",
-  "homepage": "https://github.com/agilecontent/itaas-nodejs-tools#readme"
+  "homepage": "https://github.com/agilecontent/itaas-nodejs-tools#readme",
+  "engines": {
+    "node": ">=22.0.0"
+  }
 }
