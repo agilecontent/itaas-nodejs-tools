@@ -4,7 +4,24 @@
 const fs = require('fs');
 const should = require('should');
 const express = require('express');
-const request = require('request');
+const superagent = require('superagent');
+
+//Same callback interface used before with the request library
+function request(options, callback) {
+  if (typeof options === 'string') {
+    options = { url: options };
+  }
+
+  let httpRequest = superagent(options.method || 'GET', options.url || options.uri)
+    .set(options.headers || {})
+    .ok(() => true);
+
+  if (options.body !== undefined) {
+    httpRequest = httpRequest.send(options.body);
+  }
+
+  httpRequest.end((error, response) => callback(error, response, response && response.text));
+}
 const uuid = require('uuid').v4;
 
 const tools = require('../../lib/index');

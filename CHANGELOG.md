@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## v7.6.0
+- [2026-11-16] *minor* **Remove request (deprecated) and update vulnerable dependencies (morgan 1.12.1, uuid 11.1.1, nyc as dev dependency)**
+
 ## v7.5.0
 - [2023-06-26] *Chore* [ITAAS-7584](https://agile-content.atlassian.net/browse/ITAAS-7584)
 **Add script to create a TAG in Git**
